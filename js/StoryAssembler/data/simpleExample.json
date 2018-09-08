@@ -1,0 +1,24 @@
+[
+	{
+		"id": "sampleLinks",
+		"speaker": "char1",
+		"conditions": [
+			"startExample eq false"
+		],
+		"content": "\"{name|char2}, it's time we talked about different kinds of links you can do. \"",
+		"choices": [
+			{
+				"gotoId": "demoGotoLink"
+			}
+		],
+		"effects": [
+			"set startExample true"
+		]
+	},
+	{
+		"id": "demoGotoLink",
+		"choiceLabel": "\"Do you mean...goto links?\"",
+		"speaker": "cahr2",
+		"content": "\"I suppose...well yes that's a kind of link.\""
+	}
+]
