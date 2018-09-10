@@ -18,7 +18,7 @@ requirejs.config({
 		"Templates": "StoryAssembler/js/Templates",
 		"Character": "StoryAssembler/js/Character",
 		"Hanson": "StoryAssembler/js/Hanson",
-		"HealthBar" : "StoryAssembler/lib/healthbarstandalone",
+		//"HealthBar" : "StoryAssembler/lib/healthbarstandalone",
 
 		"globalData" : "StoryAssembler/data/global.json",
 		"exampleData" : "StoryAssembler/data/example.json",

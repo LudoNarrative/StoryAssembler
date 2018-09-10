@@ -133,12 +133,6 @@ hr.title {
     z-index:-1;
 }
 
-.bg { 
-    background-size:cover;
-}
-
-/* animated front-page with backgrounds rules */
-
 #titleBackground {
     position:absolute;
     top:0px;
@@ -173,6 +167,10 @@ hr.title {
     animation-duration: 32s;
 }
 
+.bg { 
+    background-size:cover;
+    
+}
 #bg1 { background-image:url("../assets/bgs/UNroom.png"); }
 #bg2 { background-image:url("../assets/bgs/lecturehall.png"); }
 #bg3 { background-image:url("../assets/bgs/beach.png"); }

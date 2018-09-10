@@ -1,251 +1,63 @@
-html { height:100%; }
+body { font-family: arial, sans-serif; }
 
-body {
-    background: black;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom center;
-    font-family: 'Droid Sans', 'Arial', sans-serif;
-    color: white;
-    height:100%;
+h1 {
+	font-family: Arial;
 }
-
-
-/* Title screen styles */
-
-h1, h2, p.titleLink {
-    text-align:center;
-}
-
-h2 a {
-    text-decoration:none;
-    color: #43d9ff;
-    text-shadow: 2px 2px 2px #0000008a;
-}
-
-h2 a:hover {
-    text-decoration: none;
-    color: yellow;
-}
-
-#begin {
-    color: #43d9ff;
-    font-size: 40px;
-    padding: 59px 0px;
-}
-
-#begin:hover {
-    color: yellow;
-}
-
-p.titleLink a {
-    text-transform: capitalize;
-    color: #43d9ff;
-    text-decoration: none;
-    font-size: 23px;
-}
-
-p.titleLink a:hover {
-    color:yellow;
-}
-
-#bgOverlay { 
-    background-color:black;
-    opacity:0.7;
-    position:absolute;
-    top:0px;
-    left:0px;
-    width:100%;
-    height:100%;
-    z-index:-1;
-}
-
-.bg { 
-    background-size:cover;
-}
-
-
-/*
---------------Stats CSS---------------------
-*/
-
-#statsContainer {
-    position:absolute;
-    bottom:-10px;
-    left:0px;
-}
-
-#statsContainer.oneMain {
-    top: 0px;
-    bottom: unset;
-    width:20px;
-}
-
-#mainAvatarDiv { width: unset; }
-
-.statContainer {
-    display: inline-block;
-    width:300px;
-}
-
-#sceneIntro .stat {
-    background-color: transparent;
-}
-
-.stat {
-    background-color:#00aeef;
-    margin-bottom:5px;
-    height: 20px;
-    padding: 5px;
-    -webkit-transition: width 1s;
-    transition: 1s;
-}
-
-.stat-label {
-    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
-    width:200px;
-}
-
-.nameLabel {
-    text-shadow: 1px 1px 4px black;
-    font-size: 20px;
-    margin-top: 150px;
-}
-
-#mainAvatar .nameLabel {
-    text-align:center;
-    margin-top: 215px;
-}
-
-.barContainer {
-    float: left;
-    width: 130px;
-    position:relative;
-    top:30px;
-}
-
-.statContainer:first-child {
-    /* width:440px !important; */
-}
-
-.mainChar, .supportingChar {
-    float:left;
-    box-sizing: border-box;             /*makes sure border is on the inside */
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    border: 5px solid #959595;
-    border-top-right-radius: 28px;
-    border-top-left-radius: 28px;
-    z-index:2;
-    background-size: cover;
-    background-position-y: -50px;
-    background-color: #484848;
-}
-
-.mainChar {
-    height: 300px;
-    width: 275px;
-    background-position-y:top;
-}
-
-.mainChar.oneMain {
-    height:259px;
-    width:214px;
-    border-radius: 28px;
-}
-
-.supportingChar {
-    height: 190px;
-    width: 160px;
-    background-position-y:top;
-    text-align: center;
-}
-
-#stats {
-    min-height: 100px;
-    background-color: #363636;
-    width: 50%;
-    margin-top: 100px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    position: absolute;
-    margin: auto;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-#storyStats {
-    position: relative;
-    left: 20px;
-    top: 20px;
-}
-
-#gameStats {
-
-}
-
-.statLabel {
-    text-transform: capitalize;
-    color:#43d9ff;
-}
-
-.statValue {
-    font-weight:bold;
-    color:#ffe400;
-}
-
-/*
-Story CSS
-*/
 
 #storyArea, #choiceArea {
-    margin-top: 10px;
+	width: 45%;
+	margin-top: 10px;
     border-radius: 20px;
+    padding: 1px 25px;
     font-size: 120%;
+    font-family: Garamond;
 }
 #storyArea {
-    background-color: #262626;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.35);
-    min-height: 130px;
-    padding: 25px;
+    background-color: #D7FFC7;	
+    min-height: 200px;
 }
 #choiceArea {
+    background-color: #C7EAFF;
     min-height: 50px;
 }
 
+span.chunk {
+    margin-right: 0.25em;
+}
+
+#choiceArea {
+
+}
+
 .choice {
-    background-color: #585858;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.35);
-    padding: 15px 25px;
+	background-color: white;
+    border-radius: 10px;
+    padding: 10px;
     margin: 10px 0px;
-    color: #43d9ff;
-    border-radius: 20px;
 }
 .unavailableChoice {
     color: gray;
 }
 .unavailableChoice:hover {
-    color: gray !important;
+    background-color: white !important;
 }
-
+.choice::before {
+	content: "> ";
+}
 .choice:hover {
-    color: yellow;
-    background-color: #929292;
+	background-color: #D7FFC7;
 }
 
-#storyDiagnostics {
-    display:none;
+#diagnostics {
     width: 370px;
-    color:black;
+    /*height: 200px;*/
     background-color: #FFF1A5;
-    position: absolute;
+    position: fixed;
     top: 10px;
     right: 10px;
     border-radius: 10px;
     padding: 0.5em 1em;
 }
-
 .dHeader {
     font-variant: small-caps;
     text-decoration: underline;
@@ -292,7 +104,7 @@ Story CSS
     background-color: #9CF992;
 }
 
-.varClickChanger, .diagButton {
+.varClickChanger {
     background-color: #81D0FF;
     padding: 7px 13px;
     border-radius: 13px;
@@ -300,262 +112,71 @@ Story CSS
     margin-top: 20px;
     text-shadow: 1px 1px 1px #206086;
     color:white;
-    text-align: center;
 }
 
-#blackout { 
-    display:none; 
-    width:100%;
-    height:100%;
-    background-color:black;
-    position:absolute;
-    top:0;
-    left:0;
-    z-index:99;
+.varIncrease, .varDecrease {
+    margin: 0px 20px;
 }
 
-#sceneIntro {
+/* editor styles */
+
+#storyContainer.editor {
     display:none;
-    font-size:20px;
-    position:absolute;
-    left:10%;
-    width:80%;
-    height:100%;
-    color:white;
-    z-index:100;
-}
-
-#sceneIntro h2 { color: #43d9ff; }
-#sceneIntro h2:hover { color: yellow; }
-
-#introText {
-    float: left;
-    width:50%;
-    margin-top:20%;
-}
-
-#sceneIntro #introGame {
-    width:460px;
-    height:100%;
-}
-
-#introGame {
-    padding: 0px 20px;
-}
-
-#introGameInstructions { 
-    position:relative;
-    top: 425px;
-    font-size: 17px; 
-}
-
-#introGameInstructions h2, #gameInstructions h2 {
-    text-align: left;
-    font-size:20px;
-    padding-bottom:0px;
-    margin-bottom:0px;
-    color: #ffe26f;
-}
-
-#introGameInstructions h2:hover, #gameInstructions h2:hover { color: #ffe26f; }
-
-#introGameInstructions ul, #gameInstructions ul {
-    padding-top: 0px;
-    margin-top: 0px;
-}
-
-#storyDiagnosticsButton, #gameDiagnosticsButton {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-image: url('/assets/UI/gear.png');
-    background-size:100%;
-    bottom: 10px;
-    z-index: 999;
-}
-
-/*------------Timeline Stylings--------------------*/
-
-#timeline {
-    width: 80%;
-    float:right;
-}
-.sceneWindows {
-    display: block;
-    min-height: 400px;
-    width:50%;
-    border: 1px solid #ccc;
-    opacity:0.5;
-    padding:0 2%;
-    background-color:#dadada;
-    color:black !important;
-        line-height: 29px;
-}
-.sceneKnobs {
-    display: none;
-    position:absolute;
+    position:fixed;
+    width:40%;
     top:0px;
-    left:54%;
-    padding:5px;
-    background-color:#f1f1f1;
-    color:black;
-    z-index:99;
-    line-height:1.8;
-}
-.selectKnob {
-    margin-left:7px;
+    right: 60px;
 }
 
-.sceneKnobs .ui-slider {
-    margin: 0px 10px 12px;
+#storyContainer.editor div {
+    width:100% !important;
 }
 
-.sceneKnobs .ui-slider-handle {
-    text-align: center;
-    line-height: 1.2;
-    padding:1px;
-}
-
-/*Timeline tooltips*/
-/* Tooltip container */
-.tooltip {
-    position: relative;
-    display: inline-block;
-    /* border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
-
-/* Tooltip text */
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 240px;
-    background-color: #444;
-    color: #fff;
-    padding: 5px 11px 5px;
-    border-radius: 6px;
- 
-    /* Position the tooltip text - see examples below! */
+#popup {
     position: absolute;
-    z-index: 2;
-    bottom: 125%;
-    left:50%;
-    margin-left:-60px;
+    background-color: white;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    display:none;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-}
-
-.tooltip .tooltiptext::after {
-    content: " ";
+#popup_close {
     position: absolute;
-    top: 100%; /* At the bottom of the tooltip */
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #444 transparent transparent transparent;
+    right: 11px;
+    font-size: 18px;
+    font-family: Arial;
+    color: #666;
 }
 
-/* The switch - the box around the slider */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+#storyButton {
+    width:50px;
+    height:50px;
+    background-image:url('images/text.png');
+    background-size:100%;
+    top:10px;
+    left:10px;
 }
 
-/* Hide default HTML checkbox */
-.switch input {display:none;}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 4px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+#instructions {
+    font-family: arial;
+    width: 400px;
+    margin-bottom:20px;
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+#sceneSelectDiv { position:absolute; z-index:99; }
+
+#sceneSelectDiv label {
+    margin-right:10px;
 }
 
-input:checked + .slider {
-  background-color: #2196F3;
-}
+#sceneSelectDiv select { margin-bottom:10px; }
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(20px);
-  -ms-transform: translateX(20px);
-  transform: translateX(20px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-  width:50px;
-  height:29px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.switch-container {
-    float: left;
-    clear: both;
-}
-
-.switch-label {
-    position:relative;
-    top:-10px;
-    padding:0px 15px;
-}
-
-.scenePanel { position:relative; }
-
-.clearFloat {
-    width:1px;
-    height:1px;
-    clear:both;
-}
-
-.sceneWindows.active { opacity:1; }
-
-.mutable { 
-    text-decoration:underline;
-    color:#0172a0;
-}
-
-.beginScene {
-    font-size: 25px;
-    position: relative;
-    top: 20px;
-}
-
-.date {
-     transform: rotate(-90deg);
-    float: left;
-    position: absolute;
-    top: 146px;
-    font-size: 81px;
-    left: -141px;
-    opacity: 0.5;
+#cyto {
+    border:2px solid #ccc;
+    position:absolute;
+    left:0px;
+    top:0px;
 }

@@ -1,4 +1,4 @@
-define(["Templates", "HealthBar", "text!avatars", "jQuery", "jQueryUI"], function(Templates, HealthBar, avatarsData) {
+define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, avatarsData) {
 
 	var State;
 	var Coordinator;
