@@ -27,7 +27,7 @@ The "logOn" and "logOff" functions can be called to turn on detailed console log
 
 define(["Request", "util", "Character", "underscore"], function(Request, util, Character, underscore) {
 
-	var DEFAULT_MAX_DEPTH = 3; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter. Raising this too high has severe performance impacts.
+	var DEFAULT_MAX_DEPTH = 3; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter.
 
 	// Module-level reference variables
 	var curr_max_depth;

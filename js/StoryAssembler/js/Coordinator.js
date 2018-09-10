@@ -1,4 +1,4 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", "text!simpleExampleData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, simpleExampleData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", "text!globalData", "text!exampleData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, globalData, exampleData) {
 
 
 	var recordPlaythroughs = true;
@@ -11,17 +11,24 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		Templates.init(Character, this, Display);
 		State.init(Templates);
+
+
+		//setConsole();
 		
 
 		//selectable scenes from main menu
-		var scenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach", "finalUN", "intro:theEnd"];
+		var scenes = [
+			"exampleScene", 
+		//	"intro:theEnd"
+		];
 
 
 		//for reference, easy access to old temporary scenes.
-		var allScenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest", "finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
+		//var allScenes = ["exampleScene"];
+
 
 		//scenes played when you hit Begin
-		var playGameScenes = ["finalDinner", "finalLecture", "finalBeach", "intro:theEnd"];
+		var playGameScenes = ["exampleScene", "intro:theEnd"];
 		State.set("scenes", playGameScenes);
 
 		if (Display.interfaceMode == "timeline") {
@@ -100,10 +107,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	//returns index of next scene
 	//available scenes: ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
 	var getNextScene = function(currentScene) {
-		/* 
-		This is the old conditional code for moving between scenes based on states, needs to be refactored away from here to evaluate custom State compares put in each scene to see if it's valid, but that means we have to write them, so leaving for now
-		*/
-		/*
+		/* This is the old conditional code for moving between scenes based on states, needs to be refactored away from here to evaluate custom State compares put in each scene to see if it's valid, but that means we have to write them, so leaving for now
 		switch(currentScene) {
 			case "finalDinner":
 				return 1;
@@ -148,8 +152,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var getStorySpec = function(id) {
 
 		var storySpec = [
+		
+		
+		//-------------------------FINAL SCENES START HERE------------------------------------------------
 		{
-			id: "simpleExample",
+			id: "exampleScene",
 			year: 2025,
 			characters: {
 				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
@@ -159,27 +166,150 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			wishlist: [
 				{ condition: "satiation gte 5", order: "first", persistent: true },		//game interrupt
 				{ condition: "establishFriends eq true"},
+				{ condition: "establishSettingDinner eq true"},
+				{ condition: "establishDefenseTomorrow eq true"},
+				{ condition: "EmmaDefenseFeeling eq true" },
+				{ condition: "EmmaJobFutureBeat eq true" },
+				{ condition: "EmmaClassTypeBeat eq true" },
+				// old wishlist items begin here
+				{ condition: "friendIsInAcademia eq true" },
+				{ condition: "friendIsNotInAcademia eq true"},
+				// old wishlist items end here
+				/*
+				// new wishlist items begin here
+				{ condition: "establishFriend1Background eq true" },
+				{ condition: "establishFriend2Background eq true" },
+				{ condition: "establishFriend1Supportiveness eq true" },
+				{ condition: "establishFriend2Supportiveness eq true" },
+				// new wishlist items end here
+				*/
+				{ condition: "tension gte 4"},
+				{ condition: "friendTensionRelieved eq true"},
+				{ condition: "checkinWithDisagreer eq true"},
+				{ condition: "inactivityIsBad eq true"},
 				{ condition: "outro eq true", order: "last"},
 
+				{
+					condition: "state: set areaOfExpertise [phytoplankton|lobsters|coral]",
+					label: "Expertise",
+					hoverText: "Which area is your area of specialty, in regards to climate change?"
+				},
 				{
 					condition: "state: set academicFriend [0-2:1]",
 					label: "# of Academic Friends",
 					hoverText: "How many of your friends are academics? (0 is low, 2 is high)",
 					changeFunc: "friendBackgroundBalance"
+				},
+				{
+					condition: "state: set activistFriend [0-2:1]",
+					label: "# of Activist Friends",
+					hoverText: "How many of your friends are activists? (0 is low, 2 is high)",
+					changeFunc: "friendBackgroundBalance"
+				},
+				{
+					condition: "state: set supportiveFriend [0-2:1]",
+					label: "# of Supportive Friends",
+					hoverText: "How many of your friends support your decision to go into academia? (0 is low, 2 is high)",
+					changeFunc: "friendSupportivenessBalance"
+				},
+				{
+					condition: "state: set challengingFriend [0-2:1]",
+					label: "# of Challenging Friends",
+					hoverText: "How many of your friends challenge your decision to go into academia? (0 is low, 2 is high)",
+					changeFunc: "friendSupportivenessBalance"
 				}
+
 			],
 			dataFiles: [
-				"text!simpleExampleData"
+				"text!exampleData"
 			],
 
 			startState: [
 				"set establishFriends false",
+				"set establishSettingDinner false",
+				"set establishDefenseTomorrow false",
+				"set EmmaDefenseFeeling false",
+				"set EmmaJobFutureBeat false",
+				"set EmmaClassTypeBeat false",
+				/*
+				"set friendIsInAcademia false",
+				"set friendIsNotInAcademia false",
+				*/
+				// new items
+				"set establishFriend1Background false",
+				"set establishFriend2Background false",
+				"set establishFriend1Supportiveness false",
+				"set establishFriend2Supportiveness false",
+				// end new items
+				"set friendTension 0",
+				"set friendTensionRelieved false",
+				"set checkinWithDisagreer false",
+				"set inactivityIsBad false",
+				"set outro false",
+
+				// new items
+				"set academicFriend1 true",
+				"set activistFriend1 false",
+				"set academicFriend2 false",
+				"set activistFriend2 true",
+
+				"set supportiveFriend1 true",
+				"set challengingFriend1 false",
+				"set supportiveFriend2 false",
+				"set challengingFriend2 true",
+				// end new items
+
+				"set satiation 5",					//this is the game interfacing variable
+
+				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
+
+				"set friend1Relationship 5",			//on a scale between 1 to 10 (1 bad, 10 best)
+				"set friend2Relationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
+				"set confidence 5",							//scale of 1 to 10, 10 highest
+				"set academicEnthusiasm 5",					//scale of 1 to 10, 10 highest
+				"set friendTension 0",						//scale of 1 to 10, ten is high tension
+				"set tension 0"
 			],
 			UIvars: [
 				{
 					"varName" : "satiation",
 					"label" : "Satiation",
 					"characters" : [],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "academicEnthusiasm",
+					"label" : "Academic Enthusiasm",
+					"characters" : ["protagonist"],
+					"affectedBy" : "narrative",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "friend1Relationship",
+					"label" : "Friendliness",
+					"characters" : ["friend1"],
+					"affectedBy" : "narrative",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "friend2Relationship",
+					"label" : "Friendliness",
+					"characters" : ["friend2"],
+					"affectedBy" : "narrative",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "tension",
+					"label" : "tension",
+					"characters" : ["protagonist", "friend1", "friend2"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				}
@@ -202,8 +332,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var loadNoPathFallback = function(id) {
 		var fallbacks = [
 			{
-				id : "simpleExampleData",
-				text : "<p>There was some unforeseen consequences of the reader's choices, and so the scene ended early.</p>"
+				id : "exampleScene",
+				text : "<p>The rest of the details are faded, but you remembered that your friends' support proved critical as you started your path as an academic.</p>"
 			}
 		];
 
@@ -216,8 +346,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		var sceneScreens = [
 			{
-				id : "simpleExample",
-				text : "<p>This is an introduction for an example scene!</p>"
+				id : "exampleScene",
+				text : "<p>It's the year 2025. You are Emma Richards, a PhD student finishing up your degree on the effects of climate change.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
 			}
 		]
 		
@@ -235,7 +365,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var loadBackground = function(id) {
 		var sceneBgs = [
 			{
-				id : "simpleExample",
+				id : "exampleScene",
 				src : "lecturehall.png"
 			}
 		]
@@ -249,43 +379,35 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var loadAvatars = function(id) {
 		var avatarSpec= [
 			{
-				sceneId : "simpleExample",
+				sceneId : "exampleScene",
 				characters: [
 					{
 						id: "protagonist",
 						graphics: "char3",
 						age: "20s",
 						states: [	//happy, neutral, upset
-							{ state: ["concentration gte 8"], tag: "happy"},
-							{ state: ["concentration gt 3", "concentration lt 8"], tag: "neutral"},
-							{ state: ["concentration lte 3"], tag: "upset"}
+							{ state: ["default"], tag: "neutral"},
+							{ state: ["tension gte 2"], tag: "upset"}
 						]
 					},
 					{
-						id: "student1",
-						graphics: "char9",
+						id: "friend1",
+						graphics: "char12",
 						age: "20s",
-						states: [	//happy, neutral, upset
+						states: [	//happy, neutral, upset, confused
 							{ state: ["default"], tag: "happy" }
 						]
 					},
 					{
-						id: "student2",
-						graphics: "char8",
+						id: "friend2",
+						graphics: "char7",
 						age: "20s",
-						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "happy" }
-						]
-					},
-					{
-						id: "student3",
-						graphics: "char2",
-						age: "20s",
-						states: [	//happy, neutral, upset
+						states: [	//happy, neutral, confused
 							{ state: ["default"], tag: "happy" }
 						]
 					}
 				]
+
 			}
 		];
 
@@ -319,6 +441,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//TODO: warn if avatar depends on state var that is not a scene state var
 	}
 
+	//put code here if you need to initialize game logic to interface with StoryAssembler in each scene
+	var startGame = function(id,increment=true, introGame=false) {
+		
+	}
+    
+
 	return {
 		init : init,
 		loadStoryMaterials : loadStoryMaterials,
@@ -329,7 +457,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadNoPathFallback : loadNoPathFallback,
 		getNextScene : getNextScene,
 		cleanState : cleanState,
-
+		startGame : startGame,
 		getStorySpec : getStorySpec,
+		recordPlaythroughs : recordPlaythroughs
 	}
 });

@@ -17,17 +17,20 @@ requirejs.config({
 		"BestPath": "StoryAssembler/js/BestPath",
 		"Templates": "StoryAssembler/js/Templates",
 		"Character": "StoryAssembler/js/Character",
+		"Hanson": "StoryAssembler/js/Hanson",
+		"HealthBar" : "StoryAssembler/lib/healthbarstandalone",
+
+		"globalData" : "StoryAssembler/data/global.json",
+		"exampleData" : "StoryAssembler/data/example.json",
 
 		"Coordinator" : "StoryAssembler/js/Coordinator",
 		"Display" : "Display",
+		"avatars" : "../assets/avatars/avatars.json",
 
-		"Hanson": "StoryAssembler/js/Hanson",
-		"jQuery": "lib/jquery-3.0.0.min",
-		"jQueryUI": "lib/jquery-ui.min",
-
-		"simpleExampleData" : "../StoryAssembler/data/simpleExampleData.json",
-
-		},
+		"jQuery": "StoryAssembler/lib/jquery-3.0.0.min",
+		"jQueryUI": "StoryAssembler/lib/jquery-ui.min",
+		"jsonEditor": "StoryAssembler/lib/jsonEditor/jsoneditor"
+	},
 
 	shim: {
 		"jQueryUI": {
@@ -36,6 +39,8 @@ requirejs.config({
 		}
 	}
 });
+
+gameVersion = "release";			//if "release", will disable testing buttons and gears etc
 
 requirejs(
 	["State", "StoryDisplay", "Display", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "util", "domReady!"],

@@ -1,0 +1,67 @@
+[
+	{
+		"character" : "char1",			//Dean
+		"ages" : ["50s", "70s"],
+		"tags" : ["happy", "neutral", "disappointed"]
+	},
+	{
+		"character" : "char2",			//Eager Student
+		"ages" : ["20s", "30s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char3",			//Emma
+		"ages" : ["20s","30s","40s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char4",			//Emma's Dad
+		"ages" : ["40s","60s","70s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char5",			//Emma's Mom
+		"ages" : ["40s","50s","60s","70s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char5alt",			//Emma's Mom
+		"ages" : ["70s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char6",			//Rodrigo
+		"ages" : ["20s","40s","50s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char7",			//Shelly
+		"ages" : ["20s", "30s","40s","50s"],
+		"tags" : ["happy", "neutral", "confused"]
+	},
+	{
+		"character" : "char8",			//Shy student
+		"ages" : ["20s","40s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char9",			//Skeptical student
+		"ages" : ["20s","40s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char10",			//Kurt (UN)
+		"ages" : ["30s","50s"],
+		"tags" : ["smug", "neutral", "upset"]
+	},
+	{
+		"character" : "char11",			//Mikkel (UN)
+		"ages" : ["40s","60s"],
+		"tags" : ["smug", "neutral", "upset"]
+	},
+	{
+		"character" : "char12",			//Zanita
+		"ages" : ["20s","30s","40s","50s"],
+		"tags" : ["happy", "upset", "neutral", "confused"]
+	}
+]

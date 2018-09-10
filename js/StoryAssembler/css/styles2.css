@@ -1,0 +1,826 @@
+html { height:100%; }
+
+body {
+    background: black;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom center;
+    font-family: 'Droid Sans', 'Arial', sans-serif;
+    color: white;
+    height:100%;
+    
+}
+
+#storyContainer, #gameContainer {
+    width:40%;
+}
+
+#storyContainer {
+    float:left;
+}
+
+#storyContainer.oneMain {
+    position:relative;
+    left:212px;
+}
+
+#gameContainer, #introGame {
+    float:right;
+    background-color: rgba(38, 38, 38, 0.8);
+    padding: 20px 20px 25px 20px;
+    border-radius: 20px;
+    position: relative;
+    z-index: 999;
+}
+
+#gameContainer canvas, #introGame canvas {
+    position: absolute;
+    top: 30px;
+}
+
+#gameInstructions {
+    padding-top: 20px;
+    margin-top: 360px;
+}
+
+.descIcon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0px 5px;
+    position: relative;
+    top: 4px;
+}
+
+.red {
+    background-color:red;
+}
+
+.green {
+    background-color:green;
+}
+
+.blue {
+    background-color:blue;
+}
+
+.hidden { display:none; }
+
+img#title {
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 200px;
+}
+
+h1, h2, p.titleLink {
+    text-align:center;
+}
+
+h2 a {
+    text-decoration:none;
+    color: #43d9ff;
+    text-shadow: 2px 2px 2px #0000008a;
+}
+
+h2 a:hover {
+    text-decoration: none;
+    color: yellow;
+}
+
+#begin {
+    color: #43d9ff;
+    font-size: 40px;
+    padding: 59px 0px;
+}
+
+#begin:hover {
+    color: yellow;
+}
+
+p.titleLink a {
+    text-transform: capitalize;
+    color: #43d9ff;
+    text-decoration: none;
+    font-size: 23px;
+}
+
+p.titleLink a:hover {
+    color:yellow;
+}
+
+#subtitle {
+    text-align: center;
+    font-size: 22px;
+    text-shadow: 2px 2px 2px #0000008c;
+}
+
+hr.title {
+    border: 0;
+    height: 5px;
+    background-image: linear-gradient(to right, #3330, #3330, #ccc, #3330, #3330);
+    margin-top:50px;
+    margin-bottom:80px;
+}
+
+#bgOverlay { 
+    background-color:black;
+    opacity:0.7;
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+.bg { 
+    background-size:cover;
+}
+
+/* animated front-page with backgrounds rules */
+
+#titleBackground {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+#titleBackground div {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    -webkit-animation-name: cf4FadeInOut;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 8s;
+    -moz-animation-name: cf4FadeInOut;
+    -moz-animation-timing-function: ease-in-out;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-duration: 8s;
+    -o-animation-name: cf4FadeInOut;
+    -o-animation-timing-function: ease-in-out;
+    -o-animation-iteration-count: infinite;
+    -o-animation-duration: 8s;
+    animation-name: cf4FadeInOut;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 32s;
+}
+
+#bg1 { background-image:url("../assets/bgs/UNroom.png"); }
+#bg2 { background-image:url("../assets/bgs/lecturehall.png"); }
+#bg3 { background-image:url("../assets/bgs/beach.png"); }
+#bg4 { background-image:url("../assets/bgs/office.png"); }
+
+@keyframes cf4FadeInOut {
+  0% {
+    opacity:1;
+  }
+  17% {
+    opacity:1;
+  }
+  25% {
+    opacity:0;
+  }
+  92% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+#titleBackground div:nth-of-type(1) {
+  animation-delay: 24s;
+}
+#titleBackground div:nth-of-type(2) {
+  animation-delay: 16s;
+}
+#titleBackground div:nth-of-type(3) {
+  animation-delay: 8s;
+}
+#titleBackground div:nth-of-type(4) {
+  animation-delay: 0s;
+}
+
+/*
+--------------Research page CSS---------------------
+*/
+
+p.abstract {
+    margin:0px 25%;
+    text-align: justify;
+    text-shadow: 1px 1px 1px #000;
+}
+
+p.authors { 
+    text-align:center; 
+    color:#ffed8a;;
+}
+
+p.venue {
+    text-align: center;
+    color: gray;
+}
+
+.research hr {
+    border: 0;
+    height: 5px;
+    background-image: linear-gradient(to right, #3330, #3330, #ccc, #3330, #3330);
+    margin-top:50px;
+    margin-bottom:80px;
+}
+
+.research {
+    overflow: auto !important;
+}
+
+.research h1 {
+    font-size:4em;
+}
+
+/*
+--------------Credits CSS---------------------
+*/
+#credits { overflow:auto; }
+
+#credits h1 {
+    font-size:4em;
+    text-shadow: 2px 2px 2px #000000ad;
+}
+
+#credits h2 {
+    color: #43d9ff;
+    text-shadow: 2px 2px 2px #0000008a;
+    margin-top:60px;
+}
+
+#credits h3 {
+    text-align:center;
+    text-shadow: 1px 1px 1px #000000ad;
+    color:#ffed8a;
+}
+
+
+/*
+--------------Stats CSS---------------------
+*/
+
+#statsContainer {
+    position:absolute;
+    bottom:-10px;
+    left:0px;
+}
+
+#statsContainer.oneMain {
+    top: 0px;
+    bottom: unset;
+    width:20px;
+}
+
+#mainAvatarDiv { width: unset; }
+
+.statContainer {
+    display: inline-block;
+    width:300px;
+}
+
+#sceneIntro .stat {
+    background-color: transparent;
+}
+
+.stat {
+    background-color:#00aeef;
+    margin-bottom:5px;
+    height: 20px;
+    padding: 5px;
+    -webkit-transition: width 1s;
+    transition: 1s;
+}
+
+.stat-label {
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+    width:200px;
+}
+
+.nameLabel {
+    text-shadow: 1px 1px 4px black;
+    font-size: 20px;
+    margin-top: 150px;
+}
+
+#mainAvatar .nameLabel {
+    text-align:center;
+    margin-top: 215px;
+}
+
+.barContainer {
+    float: left;
+    width: 130px;
+    position:relative;
+    top:30px;
+}
+
+.statContainer:first-child {
+    /* width:440px !important; */
+}
+
+.mainChar, .supportingChar {
+    float:left;
+    box-sizing: border-box;             /*makes sure border is on the inside */
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 5px solid #959595;
+    border-top-right-radius: 28px;
+    border-top-left-radius: 28px;
+    z-index:2;
+    background-size: cover;
+    background-position-y: -50px;
+    background-color: #484848;
+}
+
+.mainChar {
+    height: 300px;
+    width: 275px;
+    background-position-y:top;
+}
+
+.mainChar.oneMain {
+    height:259px;
+    width:214px;
+    border-radius: 28px;
+}
+
+.supportingChar {
+    height: 190px;
+    width: 160px;
+    background-position-y:top;
+    text-align: center;
+}
+
+#stats {
+    min-height: 100px;
+    background-color: #363636;
+    width: 50%;
+    margin-top: 100px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#storyStats {
+    position: relative;
+    left: 20px;
+    top: 20px;
+}
+
+#gameStats {
+
+}
+
+.statLabel {
+    text-transform: capitalize;
+    color:#43d9ff;
+}
+
+.statValue {
+    font-weight:bold;
+    color:#ffe400;
+}
+
+/*
+Story CSS
+*/
+
+#storyArea, #choiceArea {
+	margin-top: 10px;
+    border-radius: 20px;
+    font-size: 120%;
+}
+#storyArea {
+    background-color: #262626;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.35);
+    min-height: 130px;
+    padding: 25px;
+}
+#choiceArea {
+    min-height: 50px;
+}
+
+.choice {
+    background-color: #585858;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.35);
+    padding: 15px 25px;
+    margin: 10px 0px;
+    color: #43d9ff;
+    border-radius: 20px;
+}
+.unavailableChoice {
+    color: gray;
+}
+.unavailableChoice:hover {
+    color: gray !important;
+}
+
+.choice:hover {
+	color: yellow;
+    background-color: #929292;
+}
+
+#storyDiagnostics {
+    display:none;
+    width: 370px;
+    color:black;
+    background-color: #FFF1A5;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 10px;
+    padding: 0.5em 1em;
+}
+
+.dHeader {
+    font-variant: small-caps;
+    text-decoration: underline;
+    padding-top: 0.75em;
+    font-size: 120%;
+}
+.firstPathStep {
+    font-weight: bold;
+    padding-left: 1em;
+}
+.pathSteps {
+    margin: 0.5em;
+    border: thin dotted gray;
+    padding: 0.5em;
+}
+.pathStep {
+}
+.pathExpl {
+    padding-left: 1em;
+    font-size: 80%;
+}
+.wlWant {
+    border: thin dotted gray;
+    background-color: #F0FBE0;
+    border-radius: 5px;
+    padding: 0.25em 0.5em;
+    margin-top: 0.75em;
+    box-shadow: 1px 1px 4px #aaa;
+    margin-bottom: 0.75em;
+}
+.blackboardEntry {
+    padding: 0.25em 0.5em;
+}
+.bbKey {
+    font-weight: bold;
+}
+.bbValue {
+    background-color: #DDDDFF;
+    border-radius: 6px;
+    padding: 0.2em;
+}
+.matchedWant {
+    border: thick solid #00981D;
+    background-color: #9CF992;
+}
+
+.varClickChanger, .diagButton {
+    background-color: #81D0FF;
+    padding: 7px 13px;
+    border-radius: 13px;
+    width: 112px;
+    margin-top: 20px;
+    text-shadow: 1px 1px 1px #206086;
+    color:white;
+    text-align: center;
+}
+
+#blackout { 
+    display:none; 
+    width:100%;
+    height:100%;
+    background-color:black;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:99;
+}
+
+#sceneIntro {
+    display:none;
+    font-size:20px;
+    position:absolute;
+    left:10%;
+    width:80%;
+    height:100%;
+    color:white;
+    z-index:100;
+}
+
+#sceneIntro h2 { color: #43d9ff; }
+#sceneIntro h2:hover { color: yellow; }
+
+#introText {
+    float: left;
+    width:50%;
+    margin-top:20%;
+}
+
+#sceneIntro #introGame {
+    width:460px;
+    height:100%;
+}
+
+#introGame {
+    padding: 0px 20px;
+}
+
+#introGameInstructions { 
+    position:relative;
+    top: 425px;
+    font-size: 17px; 
+}
+
+#introGameInstructions h2, #gameInstructions h2 {
+    text-align: left;
+    font-size:20px;
+    padding-bottom:0px;
+    margin-bottom:0px;
+    color: #ffe26f;
+}
+
+#introGameInstructions h2:hover, #gameInstructions h2:hover { color: #ffe26f; }
+
+#introGameInstructions ul, #gameInstructions ul {
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+#storyDiagnosticsButton, #gameDiagnosticsButton {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url('/assets/UI/gear.png');
+    background-size:100%;
+    bottom: 10px;
+    z-index: 999;
+}
+
+/* Game Diagnostic Panel Styles */
+
+#gameDiagnostics {
+    display:none;
+    font-size: 14px;
+    color:black;
+    background-color: #FFF1A5;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    border-radius: 10px;
+    padding: 0.5em 1em;
+    position: absolute;
+    z-index: 998;
+    width:55%;
+}
+
+#gameDiagnostics textarea {
+    min-height:500px;
+}
+
+#gameControls { 
+    position:relative;
+    top:366px;
+    z-index:999;
+}
+
+#JSONEditor {
+    min-width: 500px;
+}
+
+#evaluateJSONButton, #dumpJSONButton { float:left; margin-left:20px; }
+
+#JSONDumpDiv { 
+    display:none; 
+    position: fixed;
+    top: 13%;
+    left: 25%;
+    background-color: #efefef;
+    padding: 25px;
+    border-radius: 17px;
+}
+
+#gameDiagnosticsButton { right:10px; }
+#storyDiagnosticsButton { left: 10px; }
+
+.varChangerRow {
+    margin-bottom: 5px;
+}
+
+.varIncrease, .varDecrease {
+    margin: 0px 5px;
+    background-color: #3D9CE2;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px #114165;
+}
+
+/*------------Timeline Stylings--------------------*/
+
+#timeline {
+    width: 80%;
+    float:right;
+}
+.sceneWindows {
+    display: block;
+    min-height: 400px;
+    width:50%;
+    border: 1px solid #ccc;
+    opacity:0.5;
+    padding:0 2%;
+    background-color:#dadada;
+    color:black !important;
+        line-height: 29px;
+}
+.sceneKnobs {
+    display: none;
+    position:absolute;
+    top:0px;
+    left:54%;
+    padding:5px;
+    background-color:#f1f1f1;
+    color:black;
+    z-index:99;
+    line-height:1.8;
+}
+.selectKnob {
+    margin-left:7px;
+}
+
+.sceneKnobs .ui-slider {
+    margin: 0px 10px 12px;
+}
+
+.sceneKnobs .ui-slider-handle {
+    text-align: center;
+    line-height: 1.2;
+    padding:1px;
+}
+
+/*Timeline tooltips*/
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /* border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #444;
+    color: #fff;
+    padding: 5px 11px 5px;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 2;
+    bottom: 125%;
+    left:50%;
+    margin-left:-60px;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #444 transparent transparent transparent;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 4px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+  width:50px;
+  height:29px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.switch-container {
+    float: left;
+    clear: both;
+}
+
+.switch-label {
+    position:relative;
+    top:-10px;
+    padding:0px 15px;
+}
+
+.scenePanel { position:relative; }
+
+.clearFloat {
+    width:1px;
+    height:1px;
+    clear:both;
+}
+
+.sceneWindows.active { opacity:1; }
+
+.mutable { 
+    text-decoration:underline;
+    color:#0172a0;
+}
+
+.beginScene {
+    font-size: 25px;
+    position: relative;
+    top: 20px;
+}
+
+.date {
+     transform: rotate(-90deg);
+    float: left;
+    position: absolute;
+    top: 146px;
+    font-size: 81px;
+    left: -141px;
+    opacity: 0.5;
+}
