@@ -1,8 +1,37 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", "text!globalData", "text!exampleData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, globalData, exampleData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", "text!globalData", "text!exampleData", "text!exampleConfig"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, globalData, exampleData, exampleConfig) {
 
 
-	var recordPlaythroughs = true;
-	var consoleLogs = []				//can be StoryAssembler, Gemini, or All...in an array so in the future we can be additive
+	//----------------------------------------------------------------
+	//all the different options you can configure storyassembler with!
+	//----------------------------------------------------------------
+
+	//var recordPlaythroughs = true;
+	//var consoleLogs = []				
+
+	var settings = {
+		"recordPlaythroughs" : true,
+		"consoleLogs" : [],				//can be StoryAssembler, Gemini, or All...in an array so in the future we can be additive
+
+		"interfaceMode" : "timeline",		//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene 
+		"avatarMode" : "oneMain",			//oneMain means just one main character, otherwise "normal" RPG style
+		"sandboxMode" : true,				//whether all scenes are available (for testing)
+
+		"showUnavailableChoices" : true,	//if players should see choices they can't pick due to state, or if they're hidden
+		"enableDiagnostics" : true,			//whether to display the gear you can click to see diagnostics for debugging
+
+		"requiredFields" : [],
+		"optionalFields" : ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"],		//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
+
+		"scenes" : [
+			{
+				"id" : "exampleScene", 
+				"config" : "exampleConfig", 
+				"selectable" : true
+			}
+		],
+
+		"sceneOrder" : ["exampleScene"]			//progression of scenes when you hit "Begin", or laid out in timeline
+	}
 
 	/*
 		Initializing function
@@ -14,33 +43,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 
 		//setConsole();
-		
 
-		//selectable scenes from main menu
-		var scenes = [
-			"exampleScene", 
-		//	"intro:theEnd"
-		];
-
-
-		//for reference, easy access to old temporary scenes.
-		//var allScenes = ["exampleScene"];
-
-
-		//scenes played when you hit Begin
-		var playGameScenes = ["exampleScene", "intro:theEnd"];
-		State.set("scenes", playGameScenes);
+		State.set("scenes", settings.sceneOrder);
 
 		if (Display.interfaceMode == "timeline") {
-			Display.initTimelineScreen(this, State, scenes, playGameScenes);		//start up Timeline UI
-		}
-		else if (Display.interfaceMode == "graph") {
-			Display.initGraphScreen(this, State, scenes, playGameScenes);
+			Display.initTimelineScreen(this, State, settings.scenes, settings.sceneOrder);		//start up Timeline UI
 		}
 		else {
-			Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up scene list UI
+			Display.initTitleScreen(this, State, settings.scenes, settings.sceneOrder);		//start up scene list UI
 		}
-		
 
 	}
 
@@ -82,7 +93,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		levelDataArray.push(HanSON.parse(globalData));
 
 		ChunkLibrary.reset();
-		for (var x=0; x < levelDataArray.length; x++) { ChunkLibrary.add(levelDataArray[x]); }		//add in fragments from all files
+		for (var x=0; x < levelDataArray.length; x++) { ChunkLibrary.add(levelDataArray[x], settings); }		//add in fragments from all files
 
 		if (State.get("dynamicWishlist")) {
 			story.wishlist = State.get("processedWishlist");
@@ -361,6 +372,21 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		Display.setSceneIntro(sceneText, id);
 	};
 
+	//returns a scene description written for the timeline
+	var loadTimelineDesc = function(id) {
+		var timelineDesc = [
+			{
+				id : "exampleScene",
+				text : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p><h3><a href='#' class='beginScene' id='begin-finalDinner'>Begin Scene</a></h3>"
+			},
+			
+		]
+
+		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { 
+			return Templates.render(timelineDesc[x].text); } }
+		return "";
+	}
+
 	//loads background, for now this is based on scene id
 	var loadBackground = function(id) {
 		var sceneBgs = [
@@ -449,7 +475,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 	return {
 		init : init,
+		settings : settings,
 		loadStoryMaterials : loadStoryMaterials,
+		loadTimelineDesc : loadTimelineDesc,
 		loadAvatars : loadAvatars,
 		loadBackground : loadBackground,
 		validateArtAssets : validateArtAssets,
@@ -459,6 +487,5 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		cleanState : cleanState,
 		startGame : startGame,
 		getStorySpec : getStorySpec,
-		recordPlaythroughs : recordPlaythroughs
 	}
 });

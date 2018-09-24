@@ -24,25 +24,6 @@ body {
     left:212px;
 }
 
-#gameContainer, #introGame {
-    float:right;
-    background-color: rgba(38, 38, 38, 0.8);
-    padding: 20px 20px 25px 20px;
-    border-radius: 20px;
-    position: relative;
-    z-index: 999;
-}
-
-#gameContainer canvas, #introGame canvas {
-    position: absolute;
-    top: 30px;
-}
-
-#gameInstructions {
-    padding-top: 20px;
-    margin-top: 360px;
-}
-
 .descIcon {
     display: inline-block;
     width: 20px;
@@ -208,65 +189,6 @@ hr.title {
 }
 
 /*
---------------Research page CSS---------------------
-*/
-
-p.abstract {
-    margin:0px 25%;
-    text-align: justify;
-    text-shadow: 1px 1px 1px #000;
-}
-
-p.authors { 
-    text-align:center; 
-    color:#ffed8a;;
-}
-
-p.venue {
-    text-align: center;
-    color: gray;
-}
-
-.research hr {
-    border: 0;
-    height: 5px;
-    background-image: linear-gradient(to right, #3330, #3330, #ccc, #3330, #3330);
-    margin-top:50px;
-    margin-bottom:80px;
-}
-
-.research {
-    overflow: auto !important;
-}
-
-.research h1 {
-    font-size:4em;
-}
-
-/*
---------------Credits CSS---------------------
-*/
-#credits { overflow:auto; }
-
-#credits h1 {
-    font-size:4em;
-    text-shadow: 2px 2px 2px #000000ad;
-}
-
-#credits h2 {
-    color: #43d9ff;
-    text-shadow: 2px 2px 2px #0000008a;
-    margin-top:60px;
-}
-
-#credits h3 {
-    text-align:center;
-    text-shadow: 1px 1px 1px #000000ad;
-    color:#ffed8a;
-}
-
-
-/*
 --------------Stats CSS---------------------
 */
 
@@ -380,10 +302,6 @@ p.venue {
     position: relative;
     left: 20px;
     top: 20px;
-}
-
-#gameStats {
-
 }
 
 .statLabel {
@@ -535,38 +453,17 @@ Story CSS
     margin-top:20%;
 }
 
-#sceneIntro #introGame {
-    width:460px;
+#sceneIntro {
+    width:100%;
     height:100%;
 }
 
-#introGame {
-    padding: 0px 20px;
-}
 
-#introGameInstructions { 
-    position:relative;
-    top: 425px;
-    font-size: 17px; 
-}
 
-#introGameInstructions h2, #gameInstructions h2 {
-    text-align: left;
-    font-size:20px;
-    padding-bottom:0px;
-    margin-bottom:0px;
-    color: #ffe26f;
-}
-
-#introGameInstructions h2:hover, #gameInstructions h2:hover { color: #ffe26f; }
-
-#introGameInstructions ul, #gameInstructions ul {
-    padding-top: 0px;
-    margin-top: 0px;
-}
-
-#storyDiagnosticsButton, #gameDiagnosticsButton {
+/*    Story Diagnostics Styles     */
+#storyDiagnosticsButton {
     position: absolute;
+    left:10px;
     width: 20px;
     height: 20px;
     background-image: url('/assets/UI/gear.png');
@@ -574,52 +471,6 @@ Story CSS
     bottom: 10px;
     z-index: 999;
 }
-
-/* Game Diagnostic Panel Styles */
-
-#gameDiagnostics {
-    display:none;
-    font-size: 14px;
-    color:black;
-    background-color: #FFF1A5;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    border-radius: 10px;
-    padding: 0.5em 1em;
-    position: absolute;
-    z-index: 998;
-    width:55%;
-}
-
-#gameDiagnostics textarea {
-    min-height:500px;
-}
-
-#gameControls { 
-    position:relative;
-    top:366px;
-    z-index:999;
-}
-
-#JSONEditor {
-    min-width: 500px;
-}
-
-#evaluateJSONButton, #dumpJSONButton { float:left; margin-left:20px; }
-
-#JSONDumpDiv { 
-    display:none; 
-    position: fixed;
-    top: 13%;
-    left: 25%;
-    background-color: #efefef;
-    padding: 25px;
-    border-radius: 17px;
-}
-
-#gameDiagnosticsButton { right:10px; }
-#storyDiagnosticsButton { left: 10px; }
 
 .varChangerRow {
     margin-bottom: 5px;
@@ -811,14 +662,4 @@ input:checked + .slider:before {
     font-size: 25px;
     position: relative;
     top: 20px;
-}
-
-.date {
-     transform: rotate(-90deg);
-    float: left;
-    position: absolute;
-    top: 146px;
-    font-size: 81px;
-    left: -141px;
-    opacity: 0.5;
 }

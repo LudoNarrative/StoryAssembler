@@ -20,8 +20,11 @@ requirejs.config({
 		"Hanson": "StoryAssembler/js/Hanson",
 		//"HealthBar" : "StoryAssembler/lib/healthbarstandalone",
 
-		"globalData" : "StoryAssembler/data/global.json",
-		"exampleData" : "StoryAssembler/data/example.json",
+		"globalData" : "StoryAssembler/data/scene-content/global.json",
+
+		//each scene should have a data file and a config file included here
+		"exampleData" : "StoryAssembler/data/scene-content/example.json",
+		"exampleConfig" : "StoryAssembler/data/scene-configs/example.json",
 
 		"Coordinator" : "StoryAssembler/js/Coordinator",
 		"Display" : "Display",

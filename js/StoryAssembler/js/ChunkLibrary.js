@@ -9,18 +9,18 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 
 	var _library = {};
 
-	var requiredFields = [];
+	//var requiredFields = [];
 	//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
-	var optionalFields = ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"];
+	//var optionalFields = ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"];
 
 	// Validates and adds a chunk to the library.
-	var addChunk = function(chunk) {
+	var addChunk = function(chunk, settings) {
 /*
 		if (typeof chunk.speaker == "undefined" && typeof chunk.request == "undefined") {
 			throw new Error(chunk.id + " has no speaker, and no request field to pull in speaker from other chunk");
 		}
 */
-		Validate.check(chunk, requiredFields, optionalFields); // will throw an error if chunk has wrong fields.
+		Validate.check(chunk, settings.requiredFields, settings.optionalFields); // will throw an error if chunk has wrong fields.
 
 		// Assign an ID if one was not specified
 		if (chunk.id === undefined) {
@@ -70,15 +70,15 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	}
 
 	// Add a single chunk or an array of chunks to the library, returning a single ID or array of IDs.
-	var add = function(input) {
+	var add = function(input, settings) {
 		if (util.isArray(input)) {
 			var newIds = [];
 			input.forEach(function(chunk) {
-				newIds.push(addChunk(chunk));
+				newIds.push(addChunk(chunk, settings));
 			});
 			return newIds;
 		} else {
-			return addChunk(input);
+			return addChunk(input, settings);
 		}
 	}
 

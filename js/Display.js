@@ -3,12 +3,10 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 	var State;
 	var Coordinator;
 
-	var interfaceMode = "normal";			//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene ("normal")
-	var avatarMode = "oneMain";				//oneMain means just one main character, otherwise "normal" RPG style
+	//var interfaceMode = "timeline";			//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene ("normal")
+	//var avatarMode = "oneMain";				//oneMain means just one main character, otherwise "normal" RPG style
 
-	var sandboxMode = false;				//whether to start it in sandbox mode with everything activated
-	
-	var displayClimateFacts = false;		//whether to display climate facts or not (switch to true once we have facts in circleClicked())
+	//var sandboxMode = false;				//whether to start it in sandbox mode with everything activated
 
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
@@ -113,7 +111,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 
 		// For each scene, make a link to start it.
 		scenes.forEach(function(scene, pos) {
-			var el = makeLink(_Coordinator, scene, scene, "#");
+			var el = makeLink(_Coordinator, scene.id, scene.id, "#");
 			$('body').append(el);
 			$('body').append("<div id='hiddenKnobs'></div>");
 			createKnobs(scene, "hiddenKnobs");
@@ -126,6 +124,119 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		    //text: ''
 		}).appendTo('body');
 	}
+
+	//---------Functions for the timeline UI-----------------------------
+	var initTimelineScreen = function(_Coordinator, _State, scenes) {
+		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
+
+		var theDiv = $('<div/>', {			//make container
+		    id: 'timeline'
+		}).appendTo('body');
+
+		$('<div/>', {
+		    id: 'blackout'
+		    //text: ''
+		}).appendTo('body');
+
+		scenes.forEach(function(scene, pos) {			//make scene / knob containers
+
+
+			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
+
+			var yearStr;
+			if (_Coordinator.getStorySpec(scene))
+
+			var date = $('<div/>', {
+				id: 'date_' + scene,
+				class: 'date',
+				html: '<span>' + _Coordinator.getStorySpec(scene).year + '</span>'
+			}).appendTo("#" + scene + '-panel');
+
+			var theDiv = $('<div/>', {
+			    id: 'scene_' + scene,
+			    class: 'sceneWindows',
+			    html: '<p>' + _Coordinator.loadTimelineDesc(scene) + '</p>'
+			}).appendTo("#" + scene + '-panel');
+
+			$("#scene_" + scene).click(function() {
+				$('.sceneKnobs:visible').slideToggle("slow", function() {});
+				$('#knobs_' + scene).slideToggle("slow", function() {});
+
+				$('.sceneWindows.active').toggleClass('active', 500);
+				$(this).toggleClass('active', 500);
+			});
+
+			var targetDiv = scene + '-panel';
+			createKnobs(scene, targetDiv);
+			populateKnobs(scene, _Coordinator, _State, scenes);
+		});
+
+		initMetaKnobs(_Coordinator, _State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
+
+		activateBegins(_Coordinator, _State, scenes);
+
+		//if we haven't sent form data yet, send it
+		postTrackingStats();
+		
+		//if we don't have a unique tracking identifier for the player, set it	
+		if (localStorage.getItem("playerIdentifier") == null) { setPlayerIdentifier(); }
+	}
+
+	var returnToTimelineScreen = function(scenes) {
+
+		$('body').empty();			//reset all html
+		$('body').css("background-image", "none");
+
+		var theDiv = $('<div/>', {			//make container
+		    id: 'timeline'
+		}).appendTo('body');
+
+		$('<div/>', {
+		    id: 'blackout'
+		    //text: ''
+		}).appendTo('body');
+
+		scenes.forEach(function(scene, pos) {			//make scene / knob containers
+
+
+			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
+
+			var date = $('<div/>', {
+				id: 'date_' + scene,
+				class: 'date',
+				html: '<span>' + Coordinator.getStorySpec(scene).year + '</span>'
+			}).appendTo("#" + scene + '-panel');
+
+			var theDiv = $('<div/>', {
+			    id: 'scene_' + scene,
+			    class: 'sceneWindows',
+			    html: '<p>' + Coordinator.loadTimelineDesc(scene) + '</p>'
+			}).appendTo("#" + scene + '-panel');
+
+			$("#scene_" + scene).click(function() {
+				$('.sceneKnobs:visible').slideToggle("slow", function() {});
+				$('#knobs_' + scene).slideToggle("slow", function() {});
+
+				$('.sceneWindows.active').toggleClass('active', 500);
+				$(this).toggleClass('active', 500);
+			});
+
+			var theKnobs = $('<div/>', {
+			    id: 'knobs_' + scene,
+			    class: 'sceneKnobs closed'
+			}).appendTo("#" + scene + '-panel');
+
+			populateKnobs(scene, Coordinator, State, scenes);
+		});
+
+		initMetaKnobs(Coordinator, State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
+
+		activateBegins(Coordinator, State, scenes);
+
+		//if we haven't sent form data yet, send it
+		postTrackingStats();
+	}
+	//------end of functions for Timeline UI----------------------------------------------
 
 	var setUISceneContent = function(content, contentIndex, toggleableTitle) {
 		State.set("UIselectedLevel", content[contentIndex].beginScene);
@@ -474,6 +585,17 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 
 	}
 
+	//activate begin links in timeline UI
+	var activateBegins = function(_Coordinator, _State, scenes) {
+		$(".beginScene").click(function(evnt) { 
+			evnt.stopPropagation(); 
+			var sceneId = $(this).attr( "id" ).split("-")[1];
+			$( "#blackout" ).fadeIn( "slow", function() {
+    			startScene(_Coordinator, sceneId, true);
+			});
+		});
+	}
+
 	var initMetaKnobs = function(_Coordinator, _State) {
 		//TODO
 	}
@@ -672,7 +794,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			$("#totalGameContainer").show();
 		}
 
-		if (avatarMode == "oneMain") {
+		if (Coordinator.settings.avatarMode == "oneMain") {
 			$("#statsContainer").addClass("oneMain");
 			$("#storyContainer").addClass("oneMain");
 		}
@@ -733,7 +855,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 				var picClass = "supportingChar";
 				if (pos == 0) { picClass = "mainChar" }
 
-				if (avatarMode == "oneMain") {		//if we're in the mode where there's just one portrait for the main character...
+				if (Coordinator.settings.avatarMode == "oneMain") {		//if we're in the mode where there's just one portrait for the main character...
 
 					var fragmentPortraitChar = State.get("currentAvatar");		//grab the avatar for this fragment. If there isn't one, default to main character
 					if (typeof fragmentPortraitChar == "undefined") {
@@ -836,7 +958,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			});
 
 			var statClass = "stat";
-			if (avatarMode == "oneMain") { statClass += " hidden";	}
+			if (Coordinator.settings.avatarMode == "oneMain") { statClass += " hidden";	}
 
 			stats.forEach(function(stat, pos) {
 
@@ -878,7 +1000,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		})[0];
 		var newWidth = State.get(statName)/(stat.range[1] - stat.range[0]) * 100;
 
-		if (avatarMode !== "oneMain" && statsContainer.firstChild !== null && typeof statsContainer.firstChild.children[1].children[2] !== "undefined") {
+		if (Coordinator.settings.avatarMode !== "oneMain" && statsContainer.firstChild !== null && typeof statsContainer.firstChild.children[1].children[2] !== "undefined") {
 			var statName1 = statsContainer.firstChild.children[1].firstChild.id;
 			var statName2 = statsContainer.firstChild.children[1].children[2].id;
 
@@ -992,9 +1114,6 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 				if (interfaceMode == "timeline") {		//if timeline, return there
 					returnToTimelineScreen(State.get("scenes"));
 				}
-				else if (interfaceMode == "graph") {
-					returnToGraphScreen();
-				}
 				else {			//otherwise, start next scene
 					$('body').append("<div id='hiddenKnobs'></div>");
 					createKnobs(nextScene, "hiddenKnobs");
@@ -1100,141 +1219,21 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		        .appendTo(right);
 	  };
 
-	//adds a JSON editor to the game diagnostics panel
-	var addJSONEditor = function(gameSpec, initialPhaserFile) {
-
-        var ruleSchemas = [
-        	{
-        		"properties": {
-				    "l": {
-				      "type": "array",
-				      "format": "table",
-				      "title": "Left",
-				      "items": {
-				        "type": "string"
-				      }
-				    },
-				    "r": {
-				      "type": "array",
-				      "format": "table",
-				      "title": "Right",
-				      "items": {
-				        "type": "string"
-				      }
-				    },
-				    "relation": {
-				      "type": "string",
-				      "title": "Relation",
-				      "enum": [
-				        "is_a",
-				      ],
-				    }
-				}
-			}
-		];
-
-		var schema = {					// The schema for the editor
-          type: "array",
-          title: "Phaser Rules",
-          items: {
-            title: "Rule",
-            headerTemplate: "Rule {{i}}",
-            oneOf: ruleSchemas
-          }
-        };
-
-		var options = {
-    		//schema: schema,
-    		mode: 'text',
-    		modes: ['tree', 'text'],
-    		theme: 'html'
-  		};
-
-  		var container = document.getElementById('JSONEditorDiv');
-  		var editor = new JSONEditor(container, options);		//create editor (make it global so other buttons can pass it [hacky])
-
-  		$('<div/>', {
-			id: "JSONDumpDiv",
-		})
-		.appendTo("#JSONEditorDiv");
-		$('<textarea/>', {			//add JSON dump field
-			id: 'JSONDump',
-			rows: "4",
-			cols: "75",
-			text: ""
-		}).attr('spellcheck',false)
-		.appendTo("#JSONDumpDiv");
-
-		$('<div/>', {
-			id: "closeDump",
-			class: "diagButton",
-			text: "Close",
-			click: function() { $("#JSONDumpDiv").toggle(); }
-		})
-		.appendTo("#JSONDumpDiv");
-
-
-  		$('<div/>', {
-			id: "evaluateJSONButton",
-			class: "diagButton",
-			text: "Run new JSON",
-			click: function() {
-				Game.runGenerator(gameSpec, $("#ASPinput")[0].value.split("==========")[0], $("#ASPinput")[0].value.split("==========")[1], editor.get(), false);
-			}
-		})
-		.appendTo("#JSONEditorDiv");
-
-		$('<div/>', {
-			id: "dumpJSONButton",
-			class: "diagButton",
-			text: "Dump JSON",
-			click: function() {
-				$("#JSONDump")[0].value = JSON.stringify(editor.get(), null, 2);
-    			$("#JSONDumpDiv").toggle();
-			}
-		})
-		.appendTo("#JSONEditorDiv");
-
-		editor.set(initialPhaserFile);
-
-	}
-
-	//adds an ASP editor to the game diagnostics panel
-	var addASPEditor = function(gameSpec, aspFilepath, aspGame) {
-
-		$('<p/>', {					//add header
-			text: "ASP code from: " + aspFilepath
-		}).appendTo("#ASPEditor");
-
-		$('<textarea/>', {			//add editing field
-			id: 'ASPinput',
-			rows: "4",
-			cols: "75",
-			text: aspGame
-		}).attr('spellcheck',false)
-		.appendTo("#ASPEditor");
-
-		$('<div/>', {				//add evaluate ASP button
-			id: "evaluateASPButton",
-			class: "diagButton",
-			text: "Run ASP",
-			click: function() {
-				Game.runGenerator(gameSpec, $("#ASPinput")[0].value.split("==========")[0], $("#ASPinput")[0].value.split("==========")[1], editor.get(), false);
-			}
-		})
-		.appendTo("#ASPEditor");
-	}
-
 	//posts tracking stats if we have any unsent ones
 	var postTrackingStats = function() {
 		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
-			postToGoogleForm();
+			postToExternalTracker();
 			localStorage.removeItem("playthroughScene");
 			localStorage.removeItem("playthroughData");
 		}
 	}
 
-	var postToGoogleForm = function() {
+	/* 
+	send playthrough data to an external tracker. The code in here is taken from 
+	https://medium.com/@dmccoy/how-to-submit-an-html-form-to-google-sheets-without-google-forms-b833952cc175
+	all you should need to do is setup your own macro and put the url link in the url var in postToForm()
+	*/
+	var postToExternalTracker = function() {
 
 		if (State.get("displayType") !== "editor") {
 			postToForm(getData());
@@ -1242,7 +1241,8 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		}
 
 		function postToForm(data) {
-			var url = 'https://script.google.com/macros/s/AKfycbxXDhwmHQZMTTYrU6JzqQnC3t57cHLNOAlmTIQsLtde0LHwezo/exec';
+			/*
+			var url = 'your google script exec macro link';
 		    var xhr = new XMLHttpRequest();
 		    xhr.open('POST', url);
 		    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -1250,6 +1250,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		    // url encode form data for sending as post data
 		    var encoded = Object.keys(data).map(function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }).join('&');
 		    xhr.send(encoded);	
+		    */
 		}
 	}
 
@@ -1314,6 +1315,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		init : init,
 		initTitleScreen : initTitleScreen,
 		initSceneScreen : initSceneScreen,
+		initTimelineScreen : initTimelineScreen,
 		setAvatars : setAvatars,
 		createStats : createStats,
 		createKnobs : createKnobs,
@@ -1324,8 +1326,6 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		startScene : startScene,
 		addGameDiagnostics : addGameDiagnostics,
 		processWishlistSettings : processWishlistSettings,
-		interfaceMode : interfaceMode,
-		avatarMode : avatarMode,
 		textClickFuncs : textClickFuncs
 	} 
 });
