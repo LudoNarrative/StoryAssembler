@@ -11,6 +11,6 @@
 2. Start up Command
 3. Navigate to the StoryAssembler root directory
 4. Type the command to start a webserver:
-    *Python 3: python -m http.server
-    *Python 2: python -m SimpleHttPServer 
+  *Python 3: python -m http.server
+  *Python 2: python -m SimpleHttPServer 
 6. Start a web browser and go to http://localhost:8000
