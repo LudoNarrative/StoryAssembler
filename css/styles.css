@@ -448,16 +448,9 @@ Story CSS
 #sceneIntro h2:hover { color: yellow; }
 
 #introText {
-    float: left;
-    width:50%;
     margin-top:20%;
+    margin-bottom:10%;
 }
-
-#sceneIntro {
-    width:100%;
-    height:100%;
-}
-
 
 
 /*    Story Diagnostics Styles     */

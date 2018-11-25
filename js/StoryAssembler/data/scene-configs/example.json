@@ -4,8 +4,8 @@
 		{
 			"id" : "protagonist",			//character id
 			"avatarStates" : [		//state conditions (can be multiple) and their associated avatars to display when met
-				{ "state": ["default"], "img": "char1/char1_50s_neutral.png"},
-				{ "state": ["tension gte 2"], "tag": "char1/char1_50s_disappointed.png"}
+				{ "state": ["default"], "img": "assets/avatars/char3/char3_20s_neutral.png"},
+				{ "state": ["tension gte 2"], "img": "assets/avatars/char3/char3_20s_disappointed.png"}
 			],
 			"properties" : {			//bespoke data for each character used in custom text templates
 				"name": "Emma",
@@ -16,8 +16,8 @@
 		{
 			"id" : "friend1",			//character id
 			"avatarStates" : [		//state conditions (can be multiple) and their associated avatars to display when met
-				{ "state": ["default"], "img": "char1/char1_50s_neutral.png"},
-				{ "state": ["tension gte 2"], "tag": "char1/char1_50s_disappointed.png"}
+				{ "state": ["default"], "img": "assets/avatars/char2/char2_20s_neutral.png"},
+				{ "state": ["tension gte 2"], "img": "assets/avatars/char2/char2_20s_upset.png"}
 			],
 			"properties" : {			//bespoke data for each character used in custom text templates
 				"name" : "Zanita",
@@ -28,8 +28,8 @@
 		{
 			"id" : "friend2",			//character id
 			"avatarStates" : [		//state conditions (can be multiple) and their associated avatars to display when met
-				{ "state": ["default"], "img": "char1/char1_50s_neutral.png"},
-				{ "state": ["tension gte 2"], "tag": "char1/char1_50s_disappointed.png"}
+				{ "state": ["default"], "img": "assets/avatars/char7/char7_20s_neutral.png"},
+				{ "state": ["tension gte 2"], "img": "assets/avatars/char1/char1_20s_disappointed.png"}
 			],
 			"properties" : {			//bespoke data for each character used in custom text templates
 				"name" : "Shelly",
@@ -131,7 +131,7 @@
 		"set friendTension 0",						//scale of 1 to 10, ten is high tension
 		"set tension 0"
 	],
-	"sceneBackground" : "assets/exampleScene/bg.jpg",		//background for the scene
+	"sceneBackground" : "assets/bgs/beach.png",		//background for the scene
 	"UIvars" : [			//stats tracked on player avatars
 		{
 			"varName" : "satiation",
@@ -187,6 +187,6 @@
 		descriptionText: text to display on the timeline when players are selecting it
 	*/
 	"fallbackText" : "<p>The rest of the details are faded, but you remembered that your friends' support proved critical as you started your path as an academic.</p>",
-	"introText" : "<p>It's the year 2025. You are Emma Richards, a PhD student finishing up your degree on the effects of climate change.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>",
+	"introText" : "<p>It's the year 2025. You are Emma Richards, a PhD student finishing up your degree on the effects of climate change.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p>",
 	"descriptionText" : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p><h3><a href='#' class='beginScene' id='begin-finalDinner'>Begin Scene</a></h3>"
 }

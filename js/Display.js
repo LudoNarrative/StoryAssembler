@@ -3,7 +3,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 	var State;
 	var Coordinator;
 
-	//var interfaceMode = "timeline";			//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene ("normal")
+	//var interfaceMode = "normal";			//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene ("normal")
 	//var avatarMode = "oneMain";				//oneMain means just one main character, otherwise "normal" RPG style
 
 	//var sandboxMode = false;				//whether to start it in sandbox mode with everything activated
@@ -79,14 +79,20 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		}
 	}
 
+	//This function creates the title screen inside a div called "titleScreen" and appends that to the body
+	//If you want to change the title screen, this is where to do it!
 	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
 
 		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
 		
+		$('<div/>', {
+			id: 'titleScreen'
+		}).appendTo('body');
+
 		$('<h1/>', {
 		    text: "Emma's Journey",
 		    id: 'title'
-		}).appendTo('body');
+		}).appendTo('#titleScreen');
 
 		var begin = $('<h2/>', {
 			text: 'Begin',
@@ -96,32 +102,27 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 	    			startScene(_Coordinator, playGameScenes[0], true);
   				});
 			}
-		}).appendTo('body');
-
-		if (localStorage.getItem("playerIdentifier") == null) { setPlayerIdentifier(); }
-
-		var offset = "0px;"
-		if (gameVersion == "release") { offset = "300px"; }
+		}).appendTo('#titleScreen');
 
 		$('<h2/>', {
 		    text: 'Scene Selection',
 		    id: 'sceneSelectTitle',
-		    style: 'margin-top:' + offset
-		}).appendTo('body');
+		    style: 'margin-top:0px'
+		}).appendTo('titleScreen');
 
 		// For each scene, make a link to start it.
-		scenes.forEach(function(scene, pos) {
-			var el = makeLink(_Coordinator, scene.id, scene.id, "#");
-			$('body').append(el);
-			$('body').append("<div id='hiddenKnobs'></div>");
+		for (var scene in scenes) {
+			var el = makeLink(_Coordinator, scene, scene, "#");
+			$('#titleScreen').append(el);
+			$('#titleScreen').append("<div id='hiddenKnobs'></div>");
 			createKnobs(scene, "hiddenKnobs");
 			populateKnobs(scene, _Coordinator, _State, scenes);
-		});
+		};
 
 
+		//blackout div that's used for fading in and out between screens
 		$('<div/>', {
 		    id: 'blackout'
-		    //text: ''
 		}).appendTo('body');
 	}
 
@@ -718,7 +719,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 	}
 
 	//-------------KNOB TWIDDLING FUNCTIONS-------------------------------------------
-
+/*
 	var studentBalance = function(changer) {
 		var partnerSlider;
 		if (changer.id == "finalLecture-slider-11") { partnerSlider = "#finalLecture-slider-12"}
@@ -747,12 +748,13 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		$(partnerSlider).slider('value', (2-currentValue));
 		$(partnerSlider).find(".ui-slider-handle").text((2-currentValue));
 	}
+	*/
 //------------------------------------------------------------------------------------
 	//builds the scene divs
 	var initSceneScreen = function(State, bg, id) {
 
-		$('#graphContainer').hide();
-		$('body').css("background-image", "url('assets/bgs/"+ bg +"')"); 
+		$('#titleScreen').hide();
+		$('body').css("background-image", "url('"+ bg +"')"); 
 
 		if ($("#totalGameContainer").length == 0) {
 			$('<div/>', {
@@ -764,15 +766,6 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			    id: 'storyContainer'
 			    //text: ''
 			}).appendTo('#totalGameContainer');
-
-			$('<div/>', {
-			    id: 'gameContainer'
-			    //text: ''
-			}).appendTo('#totalGameContainer');
-
-			$('<div/>', {
-				id: 'gameControls'
-			}).appendTo('#gameContainer');
 
 			$('<div/>', {
 			    id: 'statsContainer',
@@ -823,24 +816,25 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		if (typeof State.get("characters") !== "undefined") {
 			State.get("characters").forEach(function(char, pos) {
 				var url = false;
-				var defaultTag;
+				var defaultSrc;
 				var avatar = State.avatars.filter(function( avatar ) { return avatar.id == char.id; })[0];
 
-				for (var x=0; x < avatar.states.length; x++) {			//check all avatar states to find true one
+				for (var x=0; x < avatar.avatarStates.length; x++) {			//check all avatar states to find true one
 					var correctAvatar = false;
-					if (avatar.states[x].state[0] == "default") {
-						defaultTag = avatar.states[x].tag;
+					if (avatar.avatarStates[x].state[0] == "default") {
+						defaultSrc = avatar.avatarStates[x].img;
 					}
 					else {			//don't evaluate default avatars
 						var allTrue = true;
-						for (var y=0; y < avatar.states[x].state.length; y++) {
-							if (!State.isTrue(avatar.states[x].state[y])) {
+						for (var y=0; y < avatar.avatarStates[x].state.length; y++) {
+							if (!State.isTrue(avatar.avatarStates[x].state[y])) {
 								allTrue = false;
 								break;
 							}
 						}
 						if (allTrue) {			//if it's valid...
-							url = getAvatar(avatar.graphics, avatar.age, avatar.states[x].tag);		//get avatar URL
+							//url = getAvatar(avatar.graphics, avatar.age, avatar.avatarStates[x].src);		//get avatar URL
+							url = avatar.avatarStates[x].img;
 							break;
 						}
 					}
@@ -849,7 +843,8 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 				//fallback to default if no state valid
 				if (!url) { 
 
-					url = getAvatar(avatar.graphics, avatar.age, defaultTag); 
+					//url = getAvatar(avatar.graphics, avatar.age, defaultSrc); 
+					url = defaultSrc;
 				}
 
 				var picClass = "supportingChar";
@@ -877,7 +872,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 						}
 
 						$('#mainAvatar').css("background-image", "url("+url+")"); 					//set avatar
-						$('#mainAvatar').html("<div class='nameLabel'>" + char.name + "</div>");	//set name label
+						$('#mainAvatar').html("<div class='nameLabel'>" + char.properties.name + "</div>");	//set name label
 					}
 
 					else {
@@ -926,6 +921,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		}	
 	}
 
+/*
 	//returns asset url for an avatar of a given tag, in a given set
 	var getAvatar = function(set, age, tag) {
 		var avatarsObj = HanSON.parse(avatarsData);
@@ -936,6 +932,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 
 		return "assets/avatars/" + avatarSet.character + "/" + avatarSet.character + "_" + avatarSet.ages[ageIndex] + "_" + tag +".png"; 
 	}
+	*/
 
 	/*
 	Called by story and game systems to change stat displayed, or add it
@@ -1015,7 +1012,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 	var setSceneIntro = function(sceneText, id) {
 		$("#blackout").show();
 
-		$("#sceneIntro").html("<div id='introText'>In this scene you'll have to balance exploring the narrative with playing this game. Try it out to get the hang of it before starting!</div><div id='introGame'></div>");
+		$("#sceneIntro").html("<div id='introText'>" + sceneText + "</div>");
 		if (id.substring(0,6) == "intro:") { 
 			$("#sceneIntro").html("<div id='introText' style='width:100%'>" + sceneText + "</div>");
 		}
@@ -1030,8 +1027,6 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		}
 		else if (nextScene == "intro:theEnd") { linkText = "Start Sandbox Mode"; }
 		else { linkText = "Continue"; }
-
-		$("#gameContainer").css("visibility","hidden"); // hide the empty game container during intro or interstitial scene
 
 		var linkClass = "";
 		if (id.substring(0,6) == "intro:") { linkClass = "soloLink"; }		//if we don't have a game, set CSS class so "Continue" is centered
@@ -1059,11 +1054,9 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 					
 				}
 				else {			//otherwise, it closes the intro window and starts the scene
-					$("#gameContainer").show();
 					Coordinator.startGame(id);				//start real game
 					$("#sceneIntro").fadeOut( "slow" );
 					$("#blackout").fadeOut( "slow" );
-					$("#gameContainer").css("visibility","visible"); // unhide the game container
 					State.set("refreshEnabled", true);		//enable refreshNarrative for game hook up
 					State.setPlaythroughData(State.get("currentTextId"), State.get("currentChoices"));	//set playthrough data
 				}
@@ -1073,8 +1066,6 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 	}
 
 	var setSceneOutro = function(endText) {
-
-		$("#gameContainer").hide();
 
 		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
 		var nextScene = State.get("scenes")[nextIndex];
@@ -1111,8 +1102,11 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 
 				postTrackingStats();		//post tracking stats
 
-				if (interfaceMode == "timeline") {		//if timeline, return there
+				if (Coordinator.interfaceMode == "timeline") {		//if timeline, return there
 					returnToTimelineScreen(State.get("scenes"));
+				}
+				else if (nextScene == undefined) {			//if we're on the last scene, return to title screen
+					
 				}
 				else {			//otherwise, start next scene
 					$('body').append("<div id='hiddenKnobs'></div>");

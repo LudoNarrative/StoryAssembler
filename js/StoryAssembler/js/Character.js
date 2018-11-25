@@ -1,4 +1,4 @@
-/* Implements a Character module for StoryAssembler.
+/* Implements a Character  module for StoryAssembler.
 
 A character is a person in the story being assembled (player or NPC). We use the standard State module to store character info: this module just provides a convenience wrapper around getting/setting character info.
 */

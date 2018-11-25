@@ -12,7 +12,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		"recordPlaythroughs" : true,
 		"consoleLogs" : [],				//can be StoryAssembler, Gemini, or All...in an array so in the future we can be additive
 
-		"interfaceMode" : "timeline",		//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene 
+		"interfaceMode" : "normal",		//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene ("normal")
 		"avatarMode" : "oneMain",			//oneMain means just one main character, otherwise "normal" RPG style
 		"sandboxMode" : true,				//whether all scenes are available (for testing)
 
@@ -22,13 +22,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		"requiredFields" : [],
 		"optionalFields" : ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"],		//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
 
-		"scenes" : [
-			{
-				"id" : "exampleScene", 
-				"config" : "exampleConfig", 
-				"selectable" : true
+		"scenes" : {
+			"exampleScene" : {
+				"config" : HanSON.parse(exampleConfig), 
+				"defaultDisplay" : true
 			}
-		],
+		},
 
 		"sceneOrder" : ["exampleScene"]			//progression of scenes when you hit "Begin", or laid out in timeline
 	}
@@ -104,15 +103,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		if (story.characters) {
 			Character.init(State);
-			for (var key in story.characters) {
-				Character.add(key, story.characters[key]);
+			for (var x=0; x < story.characters.length; x++) {
+				Character.add(story.characters[x].id, story.characters[x]);
 			}
 		}
 		State.set("mode", story.mode);
 		State.set("storyUIvars", story.UIvars);
 		Display.setAvatars();
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character, this);
-		StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
+		//StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
 	}
 
 	//returns index of next scene
@@ -162,180 +161,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	//returns specs for stories. If id == "all", will return all of them (for populating a menu)
 	var getStorySpec = function(id) {
 
-		var storySpec = [
-		
-		
-		//-------------------------FINAL SCENES START HERE------------------------------------------------
-		{
-			id: "exampleScene",
-			year: 2025,
-			characters: {
-				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
-				"friend1": {name: "Zanita", nickname: "Z", gender: "female"},
-				"friend2": {name: "Shelly", nickname: "Shelly", gender: "female"}
-			},
-			wishlist: [
-				{ condition: "satiation gte 5", order: "first", persistent: true },		//game interrupt
-				{ condition: "establishFriends eq true"},
-				{ condition: "establishSettingDinner eq true"},
-				{ condition: "establishDefenseTomorrow eq true"},
-				{ condition: "EmmaDefenseFeeling eq true" },
-				{ condition: "EmmaJobFutureBeat eq true" },
-				{ condition: "EmmaClassTypeBeat eq true" },
-				// old wishlist items begin here
-				{ condition: "friendIsInAcademia eq true" },
-				{ condition: "friendIsNotInAcademia eq true"},
-				// old wishlist items end here
-				/*
-				// new wishlist items begin here
-				{ condition: "establishFriend1Background eq true" },
-				{ condition: "establishFriend2Background eq true" },
-				{ condition: "establishFriend1Supportiveness eq true" },
-				{ condition: "establishFriend2Supportiveness eq true" },
-				// new wishlist items end here
-				*/
-				{ condition: "tension gte 4"},
-				{ condition: "friendTensionRelieved eq true"},
-				{ condition: "checkinWithDisagreer eq true"},
-				{ condition: "inactivityIsBad eq true"},
-				{ condition: "outro eq true", order: "last"},
-
-				{
-					condition: "state: set areaOfExpertise [phytoplankton|lobsters|coral]",
-					label: "Expertise",
-					hoverText: "Which area is your area of specialty, in regards to climate change?"
-				},
-				{
-					condition: "state: set academicFriend [0-2:1]",
-					label: "# of Academic Friends",
-					hoverText: "How many of your friends are academics? (0 is low, 2 is high)",
-					changeFunc: "friendBackgroundBalance"
-				},
-				{
-					condition: "state: set activistFriend [0-2:1]",
-					label: "# of Activist Friends",
-					hoverText: "How many of your friends are activists? (0 is low, 2 is high)",
-					changeFunc: "friendBackgroundBalance"
-				},
-				{
-					condition: "state: set supportiveFriend [0-2:1]",
-					label: "# of Supportive Friends",
-					hoverText: "How many of your friends support your decision to go into academia? (0 is low, 2 is high)",
-					changeFunc: "friendSupportivenessBalance"
-				},
-				{
-					condition: "state: set challengingFriend [0-2:1]",
-					label: "# of Challenging Friends",
-					hoverText: "How many of your friends challenge your decision to go into academia? (0 is low, 2 is high)",
-					changeFunc: "friendSupportivenessBalance"
-				}
-
-			],
-			dataFiles: [
-				"text!exampleData"
-			],
-
-			startState: [
-				"set establishFriends false",
-				"set establishSettingDinner false",
-				"set establishDefenseTomorrow false",
-				"set EmmaDefenseFeeling false",
-				"set EmmaJobFutureBeat false",
-				"set EmmaClassTypeBeat false",
-				/*
-				"set friendIsInAcademia false",
-				"set friendIsNotInAcademia false",
-				*/
-				// new items
-				"set establishFriend1Background false",
-				"set establishFriend2Background false",
-				"set establishFriend1Supportiveness false",
-				"set establishFriend2Supportiveness false",
-				// end new items
-				"set friendTension 0",
-				"set friendTensionRelieved false",
-				"set checkinWithDisagreer false",
-				"set inactivityIsBad false",
-				"set outro false",
-
-				// new items
-				"set academicFriend1 true",
-				"set activistFriend1 false",
-				"set academicFriend2 false",
-				"set activistFriend2 true",
-
-				"set supportiveFriend1 true",
-				"set challengingFriend1 false",
-				"set supportiveFriend2 false",
-				"set challengingFriend2 true",
-				// end new items
-
-				"set satiation 5",					//this is the game interfacing variable
-
-				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
-
-				"set friend1Relationship 5",			//on a scale between 1 to 10 (1 bad, 10 best)
-				"set friend2Relationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
-				"set confidence 5",							//scale of 1 to 10, 10 highest
-				"set academicEnthusiasm 5",					//scale of 1 to 10, 10 highest
-				"set friendTension 0",						//scale of 1 to 10, ten is high tension
-				"set tension 0"
-			],
-			UIvars: [
-				{
-					"varName" : "satiation",
-					"label" : "Satiation",
-					"characters" : [],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "confidence",
-					"label" : "Confidence",
-					"characters" : ["protagonist"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "academicEnthusiasm",
-					"label" : "Academic Enthusiasm",
-					"characters" : ["protagonist"],
-					"affectedBy" : "narrative",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "friend1Relationship",
-					"label" : "Friendliness",
-					"characters" : ["friend1"],
-					"affectedBy" : "narrative",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "friend2Relationship",
-					"label" : "Friendliness",
-					"characters" : ["friend2"],
-					"affectedBy" : "narrative",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "tension",
-					"label" : "tension",
-					"characters" : ["protagonist", "friend1", "friend2"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				}
-			],
-			mode: {
-				type: "dialogue",
-				initiator: "ally",
-				responder: "protagonist"
-			}
-		}
-
-		]
-
-		if (id == "all") { return storySpec; }
-		else { return storySpec.filter(function(v) { return v.id === id; })[0]; }
+		if (id == "all") { return settings.scenes; }
+		else { 
+			return settings.scenes[id].config; }
 	}
 
 	//fallback text to display if we're in release mode, so No Path Founds don't show up, but instead just end the scene early
@@ -389,20 +217,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 	//loads background, for now this is based on scene id
 	var loadBackground = function(id) {
-		var sceneBgs = [
-			{
-				id : "exampleScene",
-				src : "lecturehall.png"
-			}
-		]
-		var sceneBg = sceneBgs.filter(function(v) { return v.id === id; })[0].src;
-		return sceneBg;
+		return getStorySpec(id).sceneBackground;;
 	}
 
 	/*
 		Returns pre-defined list of avatars...hypothetically in the future we could use some metric to pull avatars based on their state gating...
 	*/
 	var loadAvatars = function(id) {
+
+		/*
 		var avatarSpec= [
 			{
 				sceneId : "exampleScene",
@@ -435,9 +258,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				]
 
 			}
-		];
+		];*/
 
-		State.avatars = avatarSpec.filter(function(v) { return v.sceneId === id; })[0].characters;
+		State.avatars = getStorySpec(id).characters;
 
 		Display.setAvatars(State);
 		Display.createStats();
@@ -451,9 +274,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		for (char in sceneData.characters) {		//loop through to make sure each character has a default avatar
 			var passed = false;
 			for (var y=0; y < State.avatars.length; y++) {
-				if (State.avatars[y].id == char) {
-					for (var x=0; x < State.avatars[y].states.length; x++) {
-						if (State.avatars[y].states[x].state == "default") {
+				if (State.avatars[y].id == sceneData.characters[char].id) {
+					for (var x=0; x < State.avatars[y].avatarStates.length; x++) {
+						if (State.avatars[y].avatarStates[x].state == "default") {
 							passed = true;
 						}
 					}

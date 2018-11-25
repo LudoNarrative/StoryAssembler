@@ -88,7 +88,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (!speaker) return "(speaker)";
 			var speakerChar = Character.get(speaker);
 			if (!speakerChar) return "(speaker)";
-			return speakerChar.name || speaker;
+			return speakerChar.properties.name || speaker;
 		},
 
 		//{name|protagonist}
@@ -99,7 +99,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			}
 			var speakerChar = Character.get(params[0]);
 			if (!speakerChar) return "(speaker)";
-			return speakerChar.name || speaker;
+			return speakerChar.properties.name || speaker;
 		},
 		//{nickname|protagonist}
 		"nickname": function(params, text) {
@@ -109,7 +109,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			}
 			var speakerChar = Character.get(params[0]);
 			if (!speakerChar) return "(nickname)";
-			return speakerChar.nickname || speaker;
+			return speakerChar.properties.nickname || speaker;
 		},
 		//{ifSpeaker|protagonist|text if true|text if false}
 		"ifSpeaker": function(params, text) {
