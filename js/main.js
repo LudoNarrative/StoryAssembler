@@ -25,6 +25,8 @@ requirejs.config({
 		//each scene should have a data file and a config file included here
 		"exampleData" : "StoryAssembler/data/scene-content/example.json",
 		"exampleConfig" : "StoryAssembler/data/scene-configs/example.json",
+		"testScene2Data" : "StoryAssembler/data/scene-content/testScene2.json",
+		"testScene2Config" : "StoryAssembler/data/scene-configs/testScene2.json",
 
 		"Coordinator" : "StoryAssembler/js/Coordinator",
 		"Display" : "Display",

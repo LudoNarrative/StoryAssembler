@@ -1,4 +1,4 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", "text!globalData", "text!exampleData", "text!exampleConfig"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, globalData, exampleData, exampleConfig) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", "text!globalData", "text!exampleData", "text!exampleConfig", "text!testScene2Data", "text!testScene2Config"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, globalData, exampleData, exampleConfig, testScene2Data, testScene2Config) {
 
 
 	//----------------------------------------------------------------
@@ -13,7 +13,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		"consoleLogs" : [],				//can be StoryAssembler, Gemini, or All...in an array so in the future we can be additive
 
 		"interfaceMode" : "normal",		//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene ("normal")
-		"avatarMode" : "oneMain",			//oneMain means just one main character, otherwise "normal" RPG style
+		"avatarMode" : "normal",			//"oneMain" means just one main character, otherwise "normal" RPG style
 		"sandboxMode" : true,				//whether all scenes are available (for testing)
 
 		"showUnavailableChoices" : true,	//if players should see choices they can't pick due to state, or if they're hidden
@@ -25,6 +25,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		"scenes" : {
 			"exampleScene" : {
 				"config" : HanSON.parse(exampleConfig), 
+				"defaultDisplay" : true
+			},
+			"testScene2" : {
+				"config" : HanSON.parse(testScene2Config), 
 				"defaultDisplay" : true
 			}
 		},
@@ -45,7 +49,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		State.set("scenes", settings.sceneOrder);
 
-		if (Display.interfaceMode == "timeline") {
+		if (settings.interfaceMode == "timeline") {
 			Display.initTimelineScreen(this, State, settings.scenes, settings.sceneOrder);		//start up Timeline UI
 		}
 		else {
@@ -115,7 +119,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	}
 
 	//returns index of next scene
-	//available scenes: ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
 	var getNextScene = function(currentScene) {
 		/* This is the old conditional code for moving between scenes based on states, needs to be refactored away from here to evaluate custom State compares put in each scene to see if it's valid, but that means we have to write them, so leaving for now
 		switch(currentScene) {
@@ -152,8 +155,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				return 0;
 		}
 		*/
-		
-		return State.get("scenes").indexOf(currentScene)+1;
+		if (State.get("scenes").indexOf(currentScene) == -1) { return -1;}			//this will happen if we're starting a loose scene from Main Menu, but it's not entered into scene progression.
+		else { return State.get("scenes").indexOf(currentScene)+1; }
 
 	}
 
@@ -183,6 +186,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 	var loadSceneIntro = function(id) {
 
+		/*
 		var sceneScreens = [
 			{
 				id : "exampleScene",
@@ -196,6 +200,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		}
 		else { lookup = id; }
 		var sceneText = sceneScreens.filter(function(v) { return v.id === lookup; })[0].text;
+		*/
+		var story = getStorySpec(id);
+		var sceneText = story.introText;
 		sceneText = Templates.render(sceneText);
 		Display.setSceneIntro(sceneText, id);
 	};
@@ -224,41 +231,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		Returns pre-defined list of avatars...hypothetically in the future we could use some metric to pull avatars based on their state gating...
 	*/
 	var loadAvatars = function(id) {
-
-		/*
-		var avatarSpec= [
-			{
-				sceneId : "exampleScene",
-				characters: [
-					{
-						id: "protagonist",
-						graphics: "char3",
-						age: "20s",
-						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "neutral"},
-							{ state: ["tension gte 2"], tag: "upset"}
-						]
-					},
-					{
-						id: "friend1",
-						graphics: "char12",
-						age: "20s",
-						states: [	//happy, neutral, upset, confused
-							{ state: ["default"], tag: "happy" }
-						]
-					},
-					{
-						id: "friend2",
-						graphics: "char7",
-						age: "20s",
-						states: [	//happy, neutral, confused
-							{ state: ["default"], tag: "happy" }
-						]
-					}
-				]
-
-			}
-		];*/
 
 		State.avatars = getStorySpec(id).characters;
 

@@ -57,7 +57,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			_coordinator.loadStoryMaterials(id);
 		}
 	}
-
+/*
 	var startGraphScene = function(_coordinator, id, loadIntro) {
 
 		$("#graphClickBlocker").hide();			//turn off click blocker
@@ -78,12 +78,13 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			_coordinator.loadStoryMaterials(id);
 		}
 	}
+	*/
 
 	//This function creates the title screen inside a div called "titleScreen" and appends that to the body
 	//If you want to change the title screen, this is where to do it!
-	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
+	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes, initialize = true) {
 
-		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
+		if (initialize) { init(_Coordinator, _State); }				//initialize our copy of the coordinator and state
 		
 		$('<div/>', {
 			id: 'titleScreen'
@@ -126,6 +127,13 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		}).appendTo('body');
 	}
 
+	//Resets the HTML and re-initializes the title screen
+	var returnToTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
+		$('body').empty();			//reset all html
+		$('body').css("background-image", "none");
+		initTitleScreen(_Coordinator, _State, scenes, playGameScenes, false);
+	}
+
 	//---------Functions for the timeline UI-----------------------------
 	var initTimelineScreen = function(_Coordinator, _State, scenes) {
 		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
@@ -139,8 +147,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		    //text: ''
 		}).appendTo('body');
 
-		scenes.forEach(function(scene, pos) {			//make scene / knob containers
-
+		for (var scene in scenes) {					//make scene / knob containers		
 
 			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
 
@@ -170,7 +177,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			var targetDiv = scene + '-panel';
 			createKnobs(scene, targetDiv);
 			populateKnobs(scene, _Coordinator, _State, scenes);
-		});
+		};
 
 		initMetaKnobs(_Coordinator, _State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
 
@@ -197,7 +204,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		    //text: ''
 		}).appendTo('body');
 
-		scenes.forEach(function(scene, pos) {			//make scene / knob containers
+		for (var scene in scenes) {				//make scene / knob containers		
 
 
 			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
@@ -228,7 +235,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			}).appendTo("#" + scene + '-panel');
 
 			populateKnobs(scene, Coordinator, State, scenes);
-		});
+		};
 
 		initMetaKnobs(Coordinator, State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
 
@@ -1043,7 +1050,16 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 					nextScene = State.get("scenes")[nextIndex];
 					if (nextScene == undefined) {		//if there's no next scene, we're at the end, so go back to title
 						State.set("playthroughCompleted", true);
-						returnToGraphScreen();
+						switch(Coordinator.settings.interfaceMode) {
+							case "normal":
+								returnToTitleScreen(Coordinator, State, Coordinator.settings.scenes, Coordinator.settings.sceneOrder);
+								break;
+							case "timeline" :
+								returnToTimelineScreen(State.get("scenes"));
+								break;
+							default:
+								throw Coordinator.settings.interfaceMode + " is not a supported mode!";
+						}
 					}
 					else {
 						if (nextScene.indexOf(":") > 0) { nextScene = nextScene.split(":")[1]; }
@@ -1095,9 +1111,8 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 				}
 			});
 			*/
-
+			var linkText = "Return To Main Screen";
 	    	var begin = $('<h2/>', {
-			text: 'Next',
 			click: function() {
 
 				postTrackingStats();		//post tracking stats
@@ -1106,9 +1121,10 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 					returnToTimelineScreen(State.get("scenes"));
 				}
 				else if (nextScene == undefined) {			//if we're on the last scene, return to title screen
-					
+					returnToTitleScreen(Coordinator, State, Coordinator.settings.scenes, Coordinator.settings.sceneOrder);
 				}
 				else {			//otherwise, start next scene
+					linkText = "Next Scene";
 					$('body').append("<div id='hiddenKnobs'></div>");
 					createKnobs(nextScene, "hiddenKnobs");
 					populateKnobs(nextScene, Coordinator, State, State.get("scenes"));
@@ -1117,7 +1133,8 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 					}, 500);
 					
 				}
-			}
+			},
+			text: linkText,
 			}).appendTo("#sceneIntro");
 
 	    	$( "#sceneIntro" ).fadeIn();

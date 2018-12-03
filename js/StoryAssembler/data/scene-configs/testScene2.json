@@ -1,5 +1,5 @@
 {
-	"id" : "exampleScene",			//id of the scene used to sync up everywhere
+	"id" : "testScene2",			//id of the scene used to sync up everywhere
 	"characters" : [				//dynamic characters used in the scene
 		{
 			"id" : "protagonist",			//character id
@@ -39,10 +39,10 @@
 		}
 	],
 	"wishlist" : [			//the state goals to be met in this scene
-		//{ "condition": "satiation gte 5", "order": "first", "persistent": true },		//game interrupt
+		{ "condition": "satiation gte 5", "order": "first", "persistent": true },		//game interrupt
 		{ "condition": "establishFriends eq true"},
 		{ "condition": "establishSettingDinner eq true"},
-		/*{ "condition": "establishDefenseTomorrow eq true"},
+		{ "condition": "establishDefenseTomorrow eq true"},
 		{ "condition": "EmmaDefenseFeeling eq true" },
 		{ "condition": "EmmaJobFutureBeat eq true" },
 		{ "condition": "EmmaClassTypeBeat eq true" },
@@ -84,10 +84,10 @@
 			"label": "# of Challenging Friends",
 			"hoverText": "How many of your friends challenge your decision to go into academia? (0 is low, 2 is high)",
 			"changeFunc": "friendSupportivenessBalance"
-		}*/
+		}
 	],
 	"dataFiles" : [				//which data files to use in scene-content when assembling valid fragments for this scene
-		"text!exampleData",
+		"text!testScene2Data",
 		"text!globalData"
 	],
 	"startState" : [				//starting state for the scene
@@ -131,7 +131,7 @@
 		"set friendTension 0",						//scale of 1 to 10, ten is high tension
 		"set tension 0"
 	],
-	"sceneBackground" : "assets/bgs/beach.png",		//background for the scene
+	"sceneBackground" : "assets/bgs/airplane.png",		//background for the scene
 	"UIvars" : [			//stats tracked on player avatars
 		{
 			"varName" : "satiation",

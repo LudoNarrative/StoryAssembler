@@ -21,27 +21,29 @@ define(["Request", "Validate", "Templates", "util", ], function(Request, Validat
 	... and in either case can optionally have an "order" field (which can be numeric, "first", or "last").
 	Note that this is the same format as valid Wants, except that instead of condition or chunkId there will be a 'request' field that is a Request object (see the Request module).
 	*/
-	var create = function(want) {
+	var create = function(rawWant) {
 
-		for (var key in want) {	
-			if (typeof want[key] == "string") {
-				want[key] = Templates.render(want[key], undefined, "want"); 
+		var want = {};			//create base object for our formatted Want
+
+		for (var key in rawWant) {			//if it's a string, run templating on it
+			if (typeof rawWant[key] == "string") {
+				want[key] = Templates.render(rawWant[key], undefined, "want"); 
 			}
 		}
-		Validate.check(want, requiredFields, optionalFields);
+		Validate.check(want, requiredFields, optionalFields);			//validate new string is correct
 
-		if (want.condition) {
+		if (rawWant.condition) {		//if it is a request by condition, format it
 			try {
-				want.request = Request.byCondition(want.condition, want.persistent);
-				delete want.condition;
+				want.request = Request.byCondition(rawWant.condition, rawWant.persistent);
+				//delete want.condition;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid condition: " + e);
 			}
 		}
-		else if (want.chunkId) {
+		else if (rawWant.chunkId) {
 			try {
-				want.request = Request.byId(want.chunkId, want.persistent);
-				delete want.chunkId;
+				want.request = Request.byId(rawWant.chunkId, rawWant.persistent);
+				//delete want.chunkId;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid chunkId: " + e);
 			}
@@ -50,13 +52,16 @@ define(["Request", "Validate", "Templates", "util", ], function(Request, Validat
 		}
 
 		want.id = util.iterator("wants");
-		if (want.order) {
-			if (want.order === "first") {
+		if (rawWant.order) {
+			if (rawWant.order === "first") {
 				want.order = Number.NEGATIVE_INFINITY;
-			} else if (want.order === "last") {
+			} else if (rawWant.order === "last") {
 				want.order = Number.POSITIVE_INFINITY;
-			} else if ((typeof want.order === "number" && want.order < 0) || typeof want.order !== "number") {
-				throw new Error("Could not create Want with invalid order '" + want.order + "': must be 'first', 'last', or an integer >= 0.");
+			} else {
+				var invalidNumber = (typeof rawWant.order === "number" && rawWant.order < 0 && rawWant.order !== Number.NEGATIVE_INFINITY);
+				if (invalidNumber || typeof rawWant.order !== "number") {
+					throw new Error("Could not create Want with invalid order '" + want.order + "': must be 'first', 'last', or an integer >= 0.");
+				}
 			}
 		}
 
