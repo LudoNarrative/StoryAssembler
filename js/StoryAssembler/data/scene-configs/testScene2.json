@@ -39,52 +39,8 @@
 		}
 	],
 	"wishlist" : [			//the state goals to be met in this scene
-		{ "condition": "satiation gte 5", "order": "first", "persistent": true },		//game interrupt
-		{ "condition": "establishFriends eq true"},
-		{ "condition": "establishSettingDinner eq true"},
-		{ "condition": "establishDefenseTomorrow eq true"},
-		{ "condition": "EmmaDefenseFeeling eq true" },
-		{ "condition": "EmmaJobFutureBeat eq true" },
-		{ "condition": "EmmaClassTypeBeat eq true" },
-		
-		{ "condition": "friendIsInAcademia eq true" },
-		{ "condition": "friendIsNotInAcademia eq true"},
-		
-		{ "condition": "tension gte 4"},
-		{ "condition": "friendTensionRelieved eq true"},
-		{ "condition": "checkinWithDisagreer eq true"},
-		{ "condition": "inactivityIsBad eq true"},
-		{ "condition": "outro eq true", "order": "last"},
-
-		{
-			"condition": "state: set areaOfExpertise [phytoplankton|lobsters|coral]",
-			"label": "Expertise",
-			"hoverText": "Which area is your area of specialty, in regards to climate change?"
-		},
-		{
-			"condition": "state: set academicFriend [0-2:1]",
-			"label": "# of Academic Friends",
-			"hoverText": "How many of your friends are academics? (0 is low, 2 is high)",
-			"changeFunc": "friendBackgroundBalance"
-		},
-		{
-			"condition": "state: set activistFriend [0-2:1]",
-			"label": "# of Activist Friends",
-			"hoverText": "How many of your friends are activists? (0 is low, 2 is high)",
-			"changeFunc": "friendBackgroundBalance"
-		},
-		{
-			"condition": "state: set supportiveFriend [0-2:1]",
-			"label": "# of Supportive Friends",
-			"hoverText": "How many of your friends support your decision to go into academia? (0 is low, 2 is high)",
-			"changeFunc": "friendSupportivenessBalance"
-		},
-		{
-			"condition": "state: set challengingFriend [0-2:1]",
-			"label": "# of Challenging Friends",
-			"hoverText": "How many of your friends challenge your decision to go into academia? (0 is low, 2 is high)",
-			"changeFunc": "friendSupportivenessBalance"
-		}
+		{ "condition": "test_establishFriends eq true"},
+		{ "condition": "test_establishSettingDinner eq true"}
 	],
 	"dataFiles" : [				//which data files to use in scene-content when assembling valid fragments for this scene
 		"text!testScene2Data",
@@ -170,23 +126,24 @@
 		},
 		{
 			"varName" : "tension",
-			"label" : "tension",
+			"label" : "Tension",
 			"characters" : ["protagonist", "friend1", "friend2"],
 			"affectedBy" : "both",
 			"range" : [0,10]
 		}
 	],
-	"mode" : {			//what mode dialogue exchange takes place in for the scene
-		"type": "dialogue",		//can be dialogue or monologue
-		"initiator": "friend1",
-		"responder": "protagonist"
-	},
+
 	/*
 		fallbackText: text to display if StoryAssembler encounters an error, but you don't want to stop the game (used primarily for "release mode")
 		introText : text to display once the scene has begun, but before any scene text is displayed
 		descriptionText: text to display on the timeline when players are selecting it
 	*/
-	"fallbackText" : "<p>The rest of the details are faded, but you remembered that your friends' support proved critical as you started your path as an academic.</p>",
+	"fallbackOutro" : "<p>The rest of the details are faded, but you remembered that your friends' support proved critical as you started your path as an academic.</p>",
+	"outroText" : "<p>Chapter successfully complete!</p>",
 	"introText" : "<p>It's the year 2025. You are Emma Richards, a PhD student finishing up your degree on the effects of climate change.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p>",
-	"descriptionText" : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p><h3><a href='#' class='beginScene' id='begin-finalDinner'>Begin Scene</a></h3>"
+	"descriptionText" : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><h3><a href='#' class='beginScene' id='begin-testScene2'>Begin Scene</a></h3>",
+
+	"shimmerFuncs" : [
+
+	]
 }

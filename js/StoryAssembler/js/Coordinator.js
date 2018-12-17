@@ -3,18 +3,17 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 	//----------------------------------------------------------------
 	//all the different options you can configure storyassembler with!
-	//----------------------------------------------------------------
-
-	//var recordPlaythroughs = true;
-	//var consoleLogs = []				
+	//----------------------------------------------------------------			
 
 	var settings = {
-		"recordPlaythroughs" : true,
-		"consoleLogs" : [],				//can be StoryAssembler, Gemini, or All...in an array so in the future we can be additive
 
-		"interfaceMode" : "normal",		//how scenes progress...a timeline that's returned to ("timeline") or progress scene-to-scene ("normal")
-		"avatarMode" : "normal",			//"oneMain" means just one main character, otherwise "normal" RPG style
-		"sandboxMode" : true,				//whether all scenes are available (for testing)
+		"gameTitle" : "Sample Game",		//title of game (used for title screen in themes)
+		"releaseMode" : true,				//if true, will end a scene early if a path bug is found. If false, will display NoPathFound error on console and crash.
+		"recordPlaythroughs" : true,
+		"consoleLogs" : [],					//which logs are displayed. Can be StoryAssembler or All...in an array so in the future we can be additive
+
+		"interfaceMode" : "normal",			//what title screen interface to use...a Begin link and progress scene-to-scene ("normal") or a timeline that's returned to ("timeline")
+		"avatarMode" : "oneMain",			//"oneMain" means display avatar of speaking character next to text, otherwise "normal" RPG style
 
 		"showUnavailableChoices" : true,	//if players should see choices they can't pick due to state, or if they're hidden
 		"enableDiagnostics" : true,			//whether to display the gear you can click to see diagnostics for debugging
@@ -24,12 +23,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		"scenes" : {
 			"exampleScene" : {
-				"config" : HanSON.parse(exampleConfig), 
-				"defaultDisplay" : true
+				"config" : HanSON.parse(exampleConfig)
 			},
 			"testScene2" : {
-				"config" : HanSON.parse(testScene2Config), 
-				"defaultDisplay" : true
+				"config" : HanSON.parse(testScene2Config)
 			}
 		},
 
@@ -67,7 +64,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	//TODO: make it do that (currently only disables it for release, which doesn't matter because players don't have the developer toolbar open)
 	var setConsole = function() {
 
-		if (gameVersion == "release") {
+		if (settings.releaseMode == true) {
 			var console = {};
 			console.log = function(){};
 			console.info = function(){};
@@ -171,17 +168,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 	//fallback text to display if we're in release mode, so No Path Founds don't show up, but instead just end the scene early
 	//(only shows up if gameVersion is set to "release")
-	var loadNoPathFallback = function(id) {
-		var fallbacks = [
-			{
-				id : "exampleScene",
-				text : "<p>The rest of the details are faded, but you remembered that your friends' support proved critical as you started your path as an academic.</p>"
-			}
-		];
+	var loadNoPathFallback = function(id) { 
 
-		for (var x=0; x < fallbacks.length; x++) { if (fallbacks[x].id == id) { 
-			return Templates.render(fallbacks[x].text); } }
-		return false;
+		if (settings.scenes[id].fallbackOutro) {
+			return Templates.render(settings.scenes[id].fallbackOutro);
+		}
+
+		else { return false; }
 	}
 
 	var loadSceneIntro = function(id) {
@@ -202,24 +195,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var sceneText = sceneScreens.filter(function(v) { return v.id === lookup; })[0].text;
 		*/
 		var story = getStorySpec(id);
-		var sceneText = story.introText;
-		sceneText = Templates.render(sceneText);
+		var sceneText = Templates.render(story.introText);
 		Display.setSceneIntro(sceneText, id);
 	};
 
 	//returns a scene description written for the timeline
 	var loadTimelineDesc = function(id) {
-		var timelineDesc = [
-			{
-				id : "exampleScene",
-				text : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p><h3><a href='#' class='beginScene' id='begin-finalDinner'>Begin Scene</a></h3>"
-			},
-			
-		]
-
-		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { 
-			return Templates.render(timelineDesc[x].text); } }
-		return "";
+		var story = getStorySpec(id);
+		var timelineDesc = Templates.render(story.descriptionText);
+		return timelineDesc;		
 	}
 
 	//loads background, for now this is based on scene id

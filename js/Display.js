@@ -91,7 +91,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		}).appendTo('body');
 
 		$('<h1/>', {
-		    text: "Emma's Journey",
+		    text: _Coordinator.settings.gameTitle,
 		    id: 'title'
 		}).appendTo('#titleScreen');
 
@@ -152,12 +152,18 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
 
 			var yearStr;
-			if (_Coordinator.getStorySpec(scene))
+			//if (_Coordinator.getStorySpec(scene))
 
+			var dateClass = 'date';
+			var dateText = "&nbsp;";
+			if (typeof _Coordinator.getStorySpec(scene).year !== "undefined") {
+				dateClass = 'date';
+				dateText = _Coordinator.getStorySpec(scene).year;
+			}
 			var date = $('<div/>', {
 				id: 'date_' + scene,
-				class: 'date',
-				html: '<span>' + _Coordinator.getStorySpec(scene).year + '</span>'
+				class: dateClass,
+				html: dateText
 			}).appendTo("#" + scene + '-panel');
 
 			var theDiv = $('<div/>', {
@@ -921,7 +927,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 					}
 
 					if (picClass == "supportingChar") { 
-						$('#charPic_' + char.id).html("<div class='nameLabel'>" + char.name + "</div>");
+						$('#charPic_' + char.id).html("<div class='nameLabel'>" + char.properties.name + "</div>");
 					}
 				}
 			});
@@ -1081,9 +1087,19 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		$("#sceneIntro").fadeIn( "slow" );
 	}
 
-	var setSceneOutro = function(endText) {
+	var setSceneOutro = function(successfulEnd) {
 
-		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
+		var currentScene = State.get("currentScene");
+		var endText;
+		if (successfulEnd) { 
+			if (typeof Coordinator.settings.scenes[currentScene].config.outroText !== "undefined") { endText = Coordinator.settings.scenes[currentScene].config.outroText; }
+			else { endText = "<p>Chapter complete!</p>"; }
+		}
+		else {
+			if (typeof Coordinator.settings.scenes[currentScene].config.fallbackOutro !== "undefined") { endText = Coordinator.settings.scenes[currentScene].config.fallbackOutro; }
+			else { endText = "<p>Chapter complete!</p>"; }
+		}
+		var nextIndex = Coordinator.getNextScene(currentScene);
 		var nextScene = State.get("scenes")[nextIndex];
 		$( "#blackout" ).delay(1600).fadeIn( "slow", function() {
 	    	$("#sceneIntro").html("<div id='outroText'>" + endText + "</div>");
@@ -1117,7 +1133,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 
 				postTrackingStats();		//post tracking stats
 
-				if (Coordinator.interfaceMode == "timeline") {		//if timeline, return there
+				if (Coordinator.settings.interfaceMode == "timeline") {		//if timeline, return there
 					returnToTimelineScreen(State.get("scenes"));
 				}
 				else if (nextScene == undefined) {			//if we're on the last scene, return to title screen
@@ -1141,6 +1157,8 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 	    });
 	}
 
+/*
+//old code to add diagnostics for ASP games...no longer needed?
 	var addGameDiagnostics = function(gameSpec, aspFilepath, aspGame, aspGameInstructions, initialPhaserFile) {
 		if (document.getElementById("gameDiagnostics") !== null) {
 		  $("#gameDiagnostics").remove();
@@ -1229,7 +1247,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		    }).attr('spellcheck',false)
 		        .appendTo(right);
 	  };
-
+*/
 	//posts tracking stats if we have any unsent ones
 	var postTrackingStats = function() {
 		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
@@ -1335,7 +1353,6 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,
 		startScene : startScene,
-		addGameDiagnostics : addGameDiagnostics,
 		processWishlistSettings : processWishlistSettings,
 		textClickFuncs : textClickFuncs
 	} 

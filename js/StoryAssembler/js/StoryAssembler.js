@@ -217,7 +217,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		}
 		else { chunkSpeaker = State.get("speaker"); }
 
-		if (Display.avatarMode == "oneMain") { 		//if we're using the mode where you can manually set avatars for each fragment, do that
+		if (Coordinator.settings.avatarMode == "oneMain") { 		//if we're using the mode where you can manually set avatars for each fragment, do that
 			State.set("currentAvatar", chunk.avatar);
 			Display.setAvatars(); 
 		}		
@@ -262,8 +262,8 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				if (!wish.persistent) { unsatisfiedWants = true; }
 			});
 
-			if (unsatisfiedWants) {	
-				if (gameVersion !== "release") { StoryDisplay.addStoryText("[No path found!]"); } 		//we ended too soon, show error
+			if (unsatisfiedWants) {
+				if (Coordinator.settings.releaseMode !== true) { StoryDisplay.addStoryText("[No path found!]"); } 		//we ended too soon, show error
 				else {
 					console.log("ENDED EARLY. WISHLISTWANTS:",wishlistWants); 
 					endScene(true);
@@ -486,14 +486,14 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
 			if (!assemblyFailed) {
 				State.setPlaythroughData("end", []);	//record last node
-				Display.setSceneOutro("<p style='text-align:center'>Chapter complete!</p>");
+				Display.setSceneOutro(true);
 			}
 			else {
 				var outroText = Coordinator.loadNoPathFallback(State.get("currentScene"));
 				if (outroText) {
 					Display.setSceneOutro(outroText);
 				}
-				else { Display.setSceneOutro("Scene finished early."); }
+				else { Display.setSceneOutro(false); }
 				
 			}
 		}
