@@ -1,4 +1,8 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", "text!globalData", "text!exampleData", "text!exampleConfig", "text!testScene2Data", "text!testScene2Config"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, globalData, exampleData, exampleConfig, testScene2Data, testScene2Config) {
+define([
+	"Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", 
+	"text!globalData", "text!exampleData", "text!exampleConfig", "text!example_staticBranchingData", "text!example_staticBranchingConfig","text!testScene2Data", "text!testScene2Config"
+	], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, 
+		globalData, exampleData, exampleConfig, example_staticBranchingData, example_staticBranchingConfig, testScene2Data, testScene2Config) {
 
 
 	//----------------------------------------------------------------
@@ -8,7 +12,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var settings = {
 
 		"gameTitle" : "Sample Game",		//title of game (used for title screen in themes)
-		"releaseMode" : true,				//if true, will end a scene early if a path bug is found. If false, will display NoPathFound error on console and crash.
+		"releaseMode" : false,				//if true, will end a scene early if a path bug is found. If false, will display NoPathFound error on console and crash.
 		"recordPlaythroughs" : true,
 		"consoleLogs" : [],					//which logs are displayed. Can be StoryAssembler or All...in an array so in the future we can be additive
 
@@ -22,6 +26,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		"optionalFields" : ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"],		//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
 
 		"scenes" : {
+			"exampleScene-branching" : {
+				"config" : HanSON.parse(example_staticBranchingConfig)
+			},
 			"exampleScene" : {
 				"config" : HanSON.parse(exampleConfig)
 			},
@@ -30,7 +37,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			}
 		},
 
-		"sceneOrder" : ["exampleScene"]			//progression of scenes when you hit "Begin", or laid out in timeline
+		"sceneOrder" : ["exampleScene-branching", "exampleScene"]			//progression of scenes when you hit "Begin", or laid out in timeline
 	}
 
 	/*
@@ -89,7 +96,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var levelDataArray = [];
 
 		//load the levelDataArray with all the dataFiles for both the level, and the global fragments file
-		for (var x=0; x < story.dataFiles.length; x++) { levelDataArray.push(HanSON.parse(require(story.dataFiles[x]))); }
+		for (var x=0; x < story.dataFiles.length; x++) { 
+			try {
+			    levelDataArray.push(HanSON.parse(require(story.dataFiles[x]))); 
+			} catch (ex) {
+			    console.error("\"" + story.dataFiles[x] + "\" couldn't be loaded via require.js. Is that name correct? Check \n1. the filename in the dataFiles array in your scene config\n2. the paths object in main.js \n3. the top of Coordinator.js \nto make sure all those names are correct!");
+			}
+			
+		}
 		levelDataArray.push(HanSON.parse(globalData));
 
 		ChunkLibrary.reset();

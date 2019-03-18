@@ -1,0 +1,46 @@
+{
+	"id" : "example-staticBranching",			//id of the scene used to sync up everywhere
+	"characters" : [				//dynamic characters used in the scene
+		{
+			"id" : "protagonist",			//character id
+			"avatarStates" : [		//state conditions (can be multiple) and their associated avatars to display when met
+				{ "state": ["default"], "img": "assets/avatars/char3/char3_20s_neutral.png"},
+				//{ "state": ["tension gte 2"], "img": "assets/avatars/char3/char3_20s_disappointed.png"}
+			],
+			"properties" : {			//bespoke data for each character used in custom text templates
+				"name": "Emma",
+				"nickname" : "Em",
+				"pronouns" : "she"
+			}
+		}
+	],
+
+	"wishlist" : [			//the state goals to be met in this scene
+		{ "condition": "finishExampleScene eq true"}
+	],
+
+	"dataFiles" : [				//which data files to use in scene-content when assembling valid fragments for this scene
+		"text!example_staticBranchingData",
+	],
+	
+	"startState" : [				//starting state for the scene
+		"set finishExampleScene false",
+	],
+
+	"sceneBackground" : "assets/bgs/beach.png",		//background for the scene
+
+	"UIvars" : [			//stats tracked on player avatars
+		
+	],
+
+	/*
+		fallbackOutro: text displayed if StoryAssembler encounters an error, but you don't want to stop the game (used primarily for "release mode")
+		outroText : text displayed when the scene ends
+		introText : text displayed once the scene has begun, but before the first fragment text is displayed
+		descriptionText (timeline view only): text to display on the timeline when players are selecting it
+	*/
+	"fallbackOutro" : "<p>Something went wrong!</p>",
+	"outroText" : "<p>Example complete! That's how static branching works!</p>",
+	"introText" : "<p>It was a beautiful summer day, so you decided to take a walk in the strange wood near your house.</p>",
+	"descriptionText" : "<h3>Static Branching</h3><p>An example scene demonstrating static branching.</p><h3><a href='#' class='beginScene' id='begin-example-staticBranching'>Begin Scene</a></h3>"
+}

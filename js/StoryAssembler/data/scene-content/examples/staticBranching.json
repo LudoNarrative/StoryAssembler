@@ -1,0 +1,61 @@
+[
+
+  {
+    "id": "beginningFragment",
+    "avatar": "protagonist",
+    "content": "You walk down the path a bit, watching the light dapple into shadow as a gentle breeze shakes the crowns of trees. After a few minutes, you come to a fork in the path.",
+    "choices": [
+      {"gotoId": "choice1"},
+      {"gotoId": "choice2"},
+    ],
+    "conditions": [
+
+    ]
+  },
+    {
+    "id": "choice1",
+    "choiceLabel" : "The left path dips into shadow.",
+    "avatar": "protagonist",
+    "content": "You take the left path, and soon the summer light has dimmed to a warm and bosky twilight.",
+    "choices": [
+      {"gotoId": "endingFragment"}
+    ],
+    "conditions": [
+
+    ]
+  },
+    {
+    "id": "choice2",
+    "choiceLabel" : "The right path climbs a steep hill.",
+    "avatar": "protagonist",
+    "content": "You huff a bit as you climb, feeling a pleasant burn in your calves. After a few minutes of exertion, you arrive at the top.",
+    "choices": [
+      {"gotoId": "endingFragment"}
+    ],
+    "conditions": [
+
+    ]
+  },
+  {
+    "id": "endingFragment",
+    "avatar": "protagonist",
+    "choiceLabel" : "Leave the forest",
+    "content": "There it is, the edge of the clearing. You give one last fond glance backwards before stepping back into the light, and the whispering grasses of the meadow.",
+    "choices": [
+      {"gotoId": "dummyEnding"}
+    ],
+    "conditions": [
+    ],
+    "effects" : [
+      "set finishExampleScene true"
+    ]
+  },
+    {
+    "id": "dummyEnding",
+    "avatar": "protagonist",
+    "choiceLabel" : "[End Scene]",
+    "content": " ",
+    "conditions": [
+    ],
+  }
+]
