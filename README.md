@@ -1,7 +1,7 @@
 # StoryAssembler
 
 A narrative system for procedurally generating choice-based interactive narratives!  
-  * Powered jointly by an HTN (hierarchical task network) planner and state-forward planner.  
+  * Powered jointly by an HTN (hierarchical task network) planner and forward-state planner.  
   * Text and choices are dynamically assembled from pre-authored fragments that have effects.
   * Narratives are driven by lists of states which are reached by fragment effects.
   * Text templating is also available to make narratives dynamic on a word-by-word basis.

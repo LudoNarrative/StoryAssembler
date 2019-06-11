@@ -337,7 +337,6 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				console.error("Template command 'stateVarAdd' must have 2 params, in text '" + text + "'.");
 				return "(stateVarAdd)";
 			}
-			console.log("doof:" + State.get(params[0]) + parseFloat(params[1]));
 			return State.get(params[0]) + parseFloat(params[1]);
 		},
 
