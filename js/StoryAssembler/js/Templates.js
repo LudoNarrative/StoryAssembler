@@ -111,6 +111,143 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (!speakerChar) return "(nickname)";
 			return speakerChar.properties.nickname || speaker;
 		},
+		//------pronouns--------------------------------------------------
+		//{they|char1}
+		"they": function(params, text) {
+			if (params.length !== 1) {
+				console.error("Template command 'they' must have 1 param, in text '" + text + "'.");
+				return "(they)";
+			}
+			var speakerChar = Character.get(params[0]);
+			if (!speakerChar) {
+				console.error("Template command 'they' asked for character " + params[0] + " but they don't exist in scene config!");
+				return "(they)";
+			}
+
+			switch(speakerChar.properties.pronouns) {
+			  case "they":
+			    return "they";
+			    break;
+			  case "she":
+			    return "she";
+			    break;
+			  case "he":
+			  	return "he";
+			    break;
+			  default:
+			    console.error("character " + params[0] + "doesn't have pronouns properly defined in scene configs!");
+			    return "(they)";
+			}
+		},
+		//{them|char1}
+		"them": function(params, text) {
+			if (params.length !== 1) {
+				console.error("Template command 'them' must have 1 param, in text '" + text + "'.");
+				return "(them)";
+			}
+			var speakerChar = Character.get(params[0]);
+			if (!speakerChar) {
+				console.error("Template command 'them' asked for character " + params[0] + " but they don't exist in scene config!");
+				return "(them)";
+			}
+
+			switch(speakerChar.properties.pronouns) {
+			  case "they":
+			    return "them";
+			    break;
+			  case "she":
+			    return "her";
+			    break;
+			  case "he":
+			  	return "him";
+			    break;
+			  default:
+			    console.error("character " + params[0] + "doesn't have pronouns properly defined in scene configs!");
+			    return "(them)";
+			}
+		},
+		//{their|char1}
+		"their": function(params, text) {
+			if (params.length !== 1) {
+				console.error("Template command 'their' must have 1 param, in text '" + text + "'.");
+				return "(their)";
+			}
+			var speakerChar = Character.get(params[0]);
+			if (!speakerChar) {
+				console.error("Template command 'their' asked for character " + params[0] + " but they don't exist in scene config!");
+				return "(their)";
+			}
+
+			switch(speakerChar.properties.pronouns) {
+			  case "they":
+			    return "their";
+			    break;
+			  case "she":
+			    return "her";
+			    break;
+			  case "he":
+			  	return "his";
+			    break;
+			  default:
+			    console.error("character " + params[0] + "doesn't have pronouns properly defined in scene configs!");
+			    return "(their)";
+			}
+		},
+		//{theirs|char1}
+		"theirs": function(params, text) {
+			if (params.length !== 1) {
+				console.error("Template command 'theirs' must have 1 param, in text '" + text + "'.");
+				return "(theirs)";
+			}
+			var speakerChar = Character.get(params[0]);
+			if (!speakerChar) {
+				console.error("Template command 'theirs' asked for character " + params[0] + " but they don't exist in scene config!");
+				return "(theirs)";
+			}
+
+			switch(speakerChar.properties.pronouns) {
+			  case "they":
+			    return "theirs";
+			    break;
+			  case "she":
+			    return "hers";
+			    break;
+			  case "he":
+			  	return "his";
+			    break;
+			  default:
+			    console.error("character " + params[0] + "doesn't have pronouns properly defined in scene configs!");
+			    return "(theirs)";
+			}
+		},
+		//{themself|char1}
+		"themself": function(params, text) {
+			if (params.length !== 1) {
+				console.error("Template command 'themself' must have 1 param, in text '" + text + "'.");
+				return "(theirs)";
+			}
+			var speakerChar = Character.get(params[0]);
+			if (!speakerChar) {
+				console.error("Template command 'themself' asked for character " + params[0] + " but they don't exist in scene config!");
+				return "(theirs)";
+			}
+
+			switch(speakerChar.properties.pronouns) {
+			  case "they":
+			    return "themself";
+			    break;
+			  case "she":
+			    return "herself";
+			    break;
+			  case "he":
+			  	return "himself";
+			    break;
+			  default:
+			    console.error("character " + params[0] + "doesn't have pronouns properly defined in scene configs!");
+			    return "(themself)";
+			}
+		},
+		//-----------------------------------------------------------------
 		//{ifSpeaker|protagonist|text if true|text if false}
 		"ifSpeaker": function(params, text) {
 			if (params.length !== 3) {

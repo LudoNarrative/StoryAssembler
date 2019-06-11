@@ -29,7 +29,7 @@
 			"id" : "friend2",			//character id
 			"avatarStates" : [		//state conditions (can be multiple) and their associated avatars to display when met
 				{ "state": ["default"], "img": "assets/avatars/char7/char7_20s_neutral.png"},
-				{ "state": ["tension gte 2"], "img": "assets/avatars/char1/char1_20s_disappointed.png"}
+				{ "state": ["tension gte 2"], "img": "assets/avatars/char7/char7_20s_disappointed.png"}
 			],
 			"properties" : {			//bespoke data for each character used in custom text templates
 				"name" : "Shelly",
