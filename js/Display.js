@@ -1128,6 +1128,7 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 			});
 			*/
 			var linkText = "Return To Main Screen";
+			if (nextScene !== undefined) { linkText = "Next Scene"; }
 	    	var begin = $('<h2/>', {
 			click: function() {
 
@@ -1140,7 +1141,6 @@ define(["Templates", "text!avatars", "jQuery", "jQueryUI"], function(Templates, 
 					returnToTitleScreen(Coordinator, State, Coordinator.settings.scenes, Coordinator.settings.sceneOrder);
 				}
 				else {			//otherwise, start next scene
-					linkText = "Next Scene";
 					$('body').append("<div id='hiddenKnobs'></div>");
 					createKnobs(nextScene, "hiddenKnobs");
 					populateKnobs(nextScene, Coordinator, State, State.get("scenes"));

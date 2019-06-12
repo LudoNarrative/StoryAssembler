@@ -122,6 +122,14 @@ define([], function() {
 		else {
 			//var tempCurrentSpeaker = speaker;
 			for (var x=0; x < iterNum; x++) {
+				if (typeof storyMode == "undefined") { 		//if there's no specified storyMode, use monologue
+					storyMode = {
+						type: "monologue",
+						initiator: _State.get('characters')[0].id
+					}
+					_State.set('mode', storyMode);
+					_State.set('speaker', storyMode.initiator);
+				}
 				switch (storyMode.type) {
 					case "narration" : 		//nothing needed
 					break;
