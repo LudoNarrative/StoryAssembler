@@ -35,6 +35,15 @@ define(["../Templates", "../State", "../StoryAssembler", "../ChunkLibrary", "Wis
 		el = document.getElementById("diagnostics");
 		el.parentNode.removeChild(el);
 	}
+
+	var pseudoCoordinator ={
+		"settings": {
+			"releaseMode" : false,				//if true, will end a scene early if a path bug is found. If false, will display NoPathFound error on console and crash.
+			"requiredFields" : [],
+			"optionalFields" : ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"],		//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
+			"sceneOrder" : ["exampleScene-branching", "exampleScene"]			//progression of scenes when you hit "Begin", or laid out in timeline
+		}
+	};
 	
 	var run = function() {
 
@@ -82,23 +91,30 @@ define(["../Templates", "../State", "../StoryAssembler", "../ChunkLibrary", "Wis
 			assert.deepEqual(render("some {testNoParams} text"), "some resultOne text", "cmd without params");
 			assert.deepEqual(render("{testNoParams} at start"), "resultOne at start", "templates at start of string");
 			assert.deepEqual(render("at end is {testNoParams}"), "at end is resultOne", "templates at end of string");
-			assert.deepEqual(render("some \\{testNoParams\\} text"), "some \\{testNoParams\\} text", "escaping braces");
-			assert.deepEqual(render("\\{testNoParams\\} at start"), "\\{testNoParams\\} at start", "escaping braces at start of string doesn't work");
-			assert.deepEqual(render("this is {messed {up"), "()", "malformed should be skipped");
+			//assert.deepEqual(render("some \\{testNoParams\\} text"), "some \\{testNoParams\\} text", "escaping braces");
+			//assert.deepEqual(render("\\{testNoParams\\} at start"), "\\{testNoParams\\} at start", "escaping braces at start of string");
+			assert.deepEqual(render("oops {{testNoParams}"), "()", "extra opening braces should be skipped");
+			assert.deepEqual(render("oops {testNoParams}}"), "oops resultOne}", "extra closing braces should be skipped");
 			assert.deepEqual(render("lots of {testTwoParams|fun|asdf} {testTwoParams|exciting|xcvb} {testNoParams} stuff"), "lots of fun exciting resultOne stuff", "test with multiple params");
 			assert.deepEqual(render("{testTwoParams|paral|x}{testTwoParams|lel|y}"), "parallel", "adjacent templates");
-			assert.deepEqual(render("{testTwoParams|{testNoParams}|nope}"), "()", "nested params without parentheses should be rejected");
+			assert.deepEqual(render("nested {testTwoParams|({testNoParams})|nope}"), "nested resultOne", "nested templates with parentheses");
+			assert.deepEqual(render("nested {testTwoParams|{testNoParams}|nope}"), "nested ()", "nested templates without parentheses should be rejected");
+
 
 			//test ifCharTraitIs grammar for conditionals based on char traits
 			var wl;
 			resetTest();
-			State.set("mode", "narration");
+			//State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			wl.logOn();
 			ChunkLibrary.add([
-				{ id: "init", content: "{ifCharTraitIs|char1|gender eq female|she|uh oh} {ifCharTraitIs|char1|gender eq fwa|she|uh oh} {ifCharTraitIs|char1|honk eq fwa|she|uh oh}", effects: ["set x true"] }
-			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+				{ 	id: "init", 
+					content: "{ifCharTraitIs|char1|gender eq female|she|uh oh} {ifCharTraitIs|char1|gender eq fwa|she|uh oh} {ifCharTraitIs|char1|honk eq fwa|she|uh oh}", 
+					effects: ["set x true"] 
+				}
+			], pseudoCoordinator.settings);
+			//function(_wishlist, _chunkLibrary, _State, _StoryDisplay, _Display, _Character, _Coordinator, params) 
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character, pseudoCoordinator);
 			assert.deepEqual(html(getStoryEl()), "she uh oh uh oh", "ifCharTraitIs works correctly");
 
 			//test charTrait grammar
@@ -108,9 +124,10 @@ define(["../Templates", "../State", "../StoryAssembler", "../ChunkLibrary", "Wis
 			wl.logOn();
 			ChunkLibrary.add([
 				{ id: "init", content: "{charTrait|char1|favFood|food} {charTrait|char1|favssFood|food}", effects: ["set x true"] }
-			]);
+			], pseudoCoordinator.settings);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
 			assert.deepEqual(html(getStoryEl()), "pork food", "charTrait work correctly");
+			
 
 		});
 

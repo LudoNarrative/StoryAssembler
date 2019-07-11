@@ -407,16 +407,16 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 
 		//if there are a non-matching number of curly braces, return error
 		if ((text.match(/{/g)||[]).length !== (text.match(/}/g)||[]).length) {
-			console.log("'" + text + "' has non-matching numbers of curly braces!");
+			console.error("'" + text + "' has non-matching numbers of curly braces!");
 			return "()";
 		}
 
-		// strip opening/closing characters, verify no nesting, and make into an array
+		// strip opening/closing characters, and make into an array
 		var strippedText = text.slice(1, text.length - 1);
-		var sanity = 1000;
+		var maxRecursion = 1000;
 
-		while (strippedText.search(/[\{\}]/g) >= 0 && sanity>0) {		//if there's nesting...
-			sanity--;
+		while (strippedText.search(/[\{\}]/g) >= 0 && maxRecursion > 0) {		//if there's nesting...
+			maxRecursion--;
 			var start = strippedText.indexOf("(");
 			var end = strippedText.indexOf(")");
 			var numOpen = 1;
@@ -424,6 +424,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			var x = start;
 			while (numOpen !== numClosed) {				//get correct nested string for both cases of () asdf () and (asdf ())
 				x++;
+				if (strippedText[x] === undefined) { break; }
 				if (strippedText[x] == "(") { numOpen++;}
 				else if (strippedText[x] == ")") { numClosed++; }
 			}
@@ -435,11 +436,9 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			}
 			var processedNested = _render(strippedText.substring(start+1, end), undefined, undefined);
 			strippedText = strippedText.replace(strippedText.substring(start,end+1), processedNested);	//replace what was in ( and ) with processedNested
-			//console.error("Nested params are not allowed in template '" + strippedText + "'");
-			//return "()";
 		}
 
-		if (sanity == 0) { alert('whaaat'); }
+		if (maxRecursion == 0) { console.error("maximum recursion hit while trying to process '" + text + "'"); }
 
 		var texts = strippedText.split("|");
 
@@ -474,22 +473,13 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		if (typeof rawText == "object") { txt = rawText[0]; }		//if rawText is coming from chunk content, it's an array, otherwise string
 		else { txt = rawText; }
 		if (txt == undefined) { return "{undefined}"; }
-		/*
-		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
-		var match;
-		while ((match = re.exec(txt)) !== null) {
-			// Reject escaped opening braces, so \{ won't count.
-			if (match.index > 0 && txt[match.index - 1] === "\\") continue;
 
-			// Replace match with rendered version.
-			//var matchText = match[0];
-			var matchText = match.input;
-			txt = txt.replace(matchText, processTemplate(matchText));
-			re = /{[^}]*}/g;
-		}
+		/*
+		we do it this way instead of using regex because nested templates make the edge cases complex
+		ie: "{a} {b}", "{a|({b})}"
 		*/
-		var maxLoops = 200;
-		while (txt.indexOf("{") > -1 && maxLoops > 0) {
+		var maxRecursion = 200;
+		while (txt.indexOf("{") > -1 && txt.indexOf("}") > -1 && maxRecursion > 0) {
 			var templateString = "";
 			var openingBraces = 0;
 			var closingBraces = 0;
@@ -508,11 +498,10 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				}
 			}
 			txt = txt.replace(templateString, processTemplate(templateString));
-			maxLoops--;
+			maxRecursion--;
 		}
 
-		if (maxLoops == 0) { console.log("problem with template in '" + txt + "'!"); }
-
+		if (maxRecursion == 0) { console.error("problem with template recursion in '" + txt + "'! (check your curly braces?)"); }
 
 
 		/*

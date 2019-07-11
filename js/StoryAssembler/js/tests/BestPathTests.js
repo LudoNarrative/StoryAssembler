@@ -2,6 +2,15 @@
 "use strict";
 define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Character"], function(Wishlist, ChunkLibrary, Request, State, Character) {
 
+	var pseudoCoordinator ={
+		"settings": {
+			"releaseMode" : false,				//if true, will end a scene early if a path bug is found. If false, will display NoPathFound error on console and crash.
+			"requiredFields" : [],
+			"optionalFields" : ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"],		//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
+			"sceneOrder" : ["exampleScene-branching", "exampleScene"]			//progression of scenes when you hit "Begin", or laid out in timeline
+		}
+	};
+
 	var run = function() {
 
 		var resetTest = function() {		//local function for resetting stuff between tests
@@ -32,7 +41,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			// Test one-step path based on ID.
 			ChunkLibrary.add([
 				{ id: "TestNode", content: "Hello, world!" },
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["TestNode"], "simple id request should have right path");
 			// We expect "nextPath.satisfies" to be an array of Wants satisfied by this path. Normally we could not guarantee these would be in any special order, but in this case since we know there's only one, we can grab it and check its two fields, "type" and "val".
@@ -46,7 +55,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "TestNode", request: {chunkId: "TestNode2"} },
 				{ id: "TestNodeZ", content: "..." },
 				{ id: "TestNode2", content: "Hola, mundo!" }
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["TestNode"], "don't need to go to leaf nodes that don't satisfy any wants");
 			assert.deepEqual(nextPath.satisfies.length, 1, "two-step path should only show wants satisfied");
@@ -58,7 +67,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "alpha", effects: ["set x true"] }
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["alpha"], "request-based path");
 			assert.deepEqual(nextPath.satisfies.length, 1, "request path should only show wants satisfied");
@@ -73,7 +82,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Node1", effects: ["set x false"], request: {chunkId: "Node2"} },
 				{ id: "Node2", effects: ["set z true"], request: {chunkId: "Node3"} },
 				{ id: "Node3", content: "..." }
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node1"], "request-based path doesn't need to go to leaf nodes that don't satisfy useful wants");
 			assert.deepEqual(nextPath.satisfies.length, 1, "request path should only show original wants satisfied");
@@ -89,7 +98,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Node1", effects: ["decr jokesTold 1"], content: "..." },
 				{ id: "Node2", effects: ["incr jokesTold 1"], conditions: ["location eq 10"], content: "..." },
 				{ id: "Node3", effects: ["incr jokesTold 1"], conditions: ["location eq 5"], content: "..." } 
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node2"], "conditions should restrict valid paths");
 
@@ -100,7 +109,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			ChunkLibrary.add([
 				{ id: "Choice1", effects: ["set x 1"], choiceLabel: "..." },
 				{ id: "Choice2", effects: ["set x 1"] } 
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Choice2"], "can't choose a chunk with a choiceLabel unless through a choice");
 
@@ -110,7 +119,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "alpha", content: "What do you choose?", choices: [{chunkId: "Choice1"}, {condition: "z eq 5"}] },
 				{ id: "Choice1", choiceLabel: "Choice 1", content: "Result of Choice 1." },
 				{ id: "Choice2", choiceLabel: "Choice 2", content: "Result of Choice 2.", effects: ["set z 5", "set x 1"] },
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["alpha", "Choice2"], "can iterate down through choices");
 			assert.deepEqual(nextPath.satisfies.length, 1, "'satisfies' should only show original Wants");
@@ -123,7 +132,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			ChunkLibrary.add([
 				{ id: "Node1", request: {chunkId: "Node2"} },
 				{ id: "Node2", request: {chunkId: "Node1"}, conditions: ["node2Banned eq false"], effects: ["set x 1"] },
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.notOk(nextPath, "can't find a path ending in a node with an invalid condition.");
 
@@ -136,7 +145,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Node2", content: "...", effects: ["set y true", "set w true", "set r true"] },
 				{ id: "Node3", content: "...", effects: ["set x true", "set y true"] },
 
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node3"], "should pick a path that satisfies as many Wants as possible.");
 
@@ -152,7 +161,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "ChoiceNode", content: "...", effects: ["set x true"], choices: [{chunkId: "Result1"}, {chunkId: "Result2"}] },
 				{ id: "Result1", choiceLabel: "...", content: "...", effects: ["set q true"] },
 				{ id: "Result2", choiceLabel: "...", content: "...", effects: ["set y true"] }
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["ChoiceNode", "Result2"], "should maximize Wants through choice structures.");
 
@@ -164,7 +173,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "answer1", choiceLabel: "..." },
 				{ id: "Choice2", choices: [{chunkId: "answer2"}], effects: ["set x true"] },
 				{ id: "answer2", choiceLabel: "..." }
-			]);
+			], pseudoCoordinator.settings);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Choice2"], "Multiple choices should be handled correctly.");
 
@@ -179,7 +188,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			wl = Wishlist.create([{chunkId: "TestNode"}], State);
 			ChunkLibrary.add([
 				{ id: "TestNode", content: "Hello, world!" },
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.notOk(bestPath.choiceDetails, "If the first step in the path is not a choice, should not have a choiceDetails field.");
 
@@ -191,7 +200,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
 				{ id: "answerY", choiceLabel: "answerY choiceLabel", effects: ["set y true"] },
 				{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]}
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Choice1", "answerY"], "choiceDetails correct when we recurse into a choice.");
 			assert.deepEqual(bestPath.choiceDetails.length, 2, "choiceDetails field should exist and have same length as chunk's choices field");
@@ -204,7 +213,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
 				{ id: "answerY", choiceLabel: "answerY choiceLabel", effects: ["set y true"] },
 				{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]}
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Choice1"], "choiceDetails correct when we don't need to recurse into a choice.");
 			assert.deepEqual(bestPath.choiceDetails.length, 2, "choiceDetails field should exist and have same length as chunk's choices field (when no recurse)");
@@ -218,7 +227,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "answerY", choiceLabel: "answerY choiceLabel", choices: [{condition: "q eq true"}], effects: ["set y true"] },
 				{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]},
 				{ id: "NodeQ", choiceLabel: "NodeQ choiceLabel", effects: ["set q true"] }
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.choiceDetails.length, 2, "recursing through multiple choices shouldn't affect top-level choiceDetails (1/3)");
 			assert.deepEqual(bestPath.choiceDetails[0].id, "answerY", "recursing through multiple choices shouldn't affect top-level choiceDetails (2/3)");
@@ -236,7 +245,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Node1", effects: ["set x true"] },
 				{ id: "Node2", effects: ["set x true"] },
 				{ id: "Node3", effects: ["set x true"] },
-			]);
+			], pseudoCoordinator.settings);
 			allPaths = wl.allPaths(ChunkLibrary);
 			assert.deepEqual(allPaths.length, 3, "allPaths should return right number of paths");
 			assert.deepEqual(allPaths[0].satisfies.length, 1, "allPaths should have satisfies of right length");
@@ -249,7 +258,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Node1", content: "...", choices: [{chunkId: "Node2"}, {chunkId: "Node3"}], effects: ["set x true"] },
 				{ id: "Node2", content: "...", choiceLabel: "...", effects: ["set x true"] },
 				{ id: "Node3", content: "...", choiceLabel: "..." }
-			]);
+			], pseudoCoordinator.settings);
 			allPaths = wl.allPaths(ChunkLibrary);
 			assert.deepEqual(allPaths.length, 1, "setting up test");
 			assert.deepEqual(allPaths[0].satisfies.length, 1, "duplicate effects shouldn't change 'satisfies' size");
@@ -265,7 +274,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			ChunkLibrary.add([
 				{ id: "Choice1", choices: [{condition: "x eq true"}, {condition: "y eq true"}] },
 				{ id: "AnswerX", effects: ["set x true"], choiceLabel: "..." }
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Choice1"], "A missing choice request shouldn't affect a matching path to that choice.");
 			assert.deepEqual(bestPath.choiceDetails.length, 2, "A missing choice request shouldn't affect the number of choiceDetails objects returned.");
@@ -279,7 +288,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			wl = Wishlist.create([{chunkId: "Node1"}], State);
 			ChunkLibrary.add([
 				{ id: "Node2", content: "..." }
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.notOk(bestPath, "Should return no path if a valid node can't be found by ID.");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
@@ -294,7 +303,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Choice1", choices: [{chunkId: "Fake1"}, {chunkId: "Fake2"}], effects: ["set x true"] },
 				{ id: "Choice2", choices: [{chunkId: "NodeP"}], effects: ["set x true"] },
 				{ id: "NodeP", content: "...", choiceLabel: "..." }
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Choice2"], "We should prefer a path with available options over one without.");
 
@@ -311,7 +320,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Chunk1", choices: [{chunkId: "Chunk2"}] },
 				{ id: "Chunk2", choiceLabel: "...", choices: [{chunkId: "Chunk3"}] },
 				{ id: "Chunk3", choiceLabel: "...", effects: ["set x true"] }
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary, {max_depth: 4});
 			assert.deepEqual(bestPath.route, ["Chunk1", "Chunk2", "Chunk3"], "Should find route if max_depth is more than required.");
 			bestPath = wl.bestPath(ChunkLibrary, {max_depth: 3});
@@ -333,7 +342,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "Chunk1", content: "...", effects: ["set x true"] },
 				{ id: "Chunk2", content: "...", effects: ["set y true"] },
 				{ id: "Chunk3", content: "...", effects: ["set z true"] }
-			]);
+			], pseudoCoordinator.settings);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Chunk2"], "Should satisfy an order: first Want before any others.");
 
@@ -379,7 +388,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 				{ id: "shortest_Chunk1", content: "...", choices: [{condition: "x eq true"}] },
 				{ id: "shortest_Chunk2", content: "...", choices: [{condition: "x eq true"}] },
 				{ id: "shortest_Chunk3", content: "...", effects: ["set x true"], choiceLabel: "..." }
-			]);
+			], pseudoCoordinator.settings);
 
 			wl.logOn();
 			bestPath = wl.bestPath(ChunkLibrary);

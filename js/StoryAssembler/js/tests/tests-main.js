@@ -68,7 +68,7 @@ requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", 
   TemplatesTest.run();
   StoryAssemblerTests.run();
   CharacterTests.run();
-  NarrationModesTests.run();
+  //NarrationModesTests.run();
 
 	QUnit.load();
 	QUnit.start();
