@@ -23,14 +23,10 @@ requirejs.config({
 		"globalData" : "StoryAssembler/data/scene-content/global.json",
 
 		//each scene should have a data file and a config file included here
-		"exampleData" : "StoryAssembler/data/scene-content/example.json",
-		"exampleConfig" : "StoryAssembler/data/scene-configs/example.json",
 		"example_staticBranchingData" : "StoryAssembler/data/scene-content/examples/staticBranching.json",
 		"example_staticBranchingConfig" : "StoryAssembler/data/scene-configs/examples/staticBranching.json",
-		"example_staticBranchingData" : "StoryAssembler/data/scene-content/examples/dynamicBranching.json",
-		"example_staticBranchingConfig" : "StoryAssembler/data/scene-configs/examples/dynamicBranching.json",
-		"testScene2Data" : "StoryAssembler/data/scene-content/testScene2.json",
-		"testScene2Config" : "StoryAssembler/data/scene-configs/testScene2.json",
+		"example_dynamicBranchingData" : "StoryAssembler/data/scene-content/examples/dynamicBranching.json",
+		"example_dynamicBranchingConfig" : "StoryAssembler/data/scene-configs/examples/dynamicBranching.json",
 
 		"Coordinator" : "StoryAssembler/js/Coordinator",
 		"Display" : "Display",

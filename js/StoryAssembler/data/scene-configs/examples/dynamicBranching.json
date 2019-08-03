@@ -1,9 +1,9 @@
 {
 	"id" : "example-staticBranching",			//id of the scene used to sync up everywhere
-	"characters" : [				//dynamic characters used in the scene
+	"characters" : [							//dynamic characters used in the scene
 		{
 			"id" : "protagonist",			//character id
-			"avatarStates" : [		//state conditions (can be multiple) and their associated avatars to display when met
+			"avatarStates" : [				//state conditions (can be multiple) and their associated avatars to display when met
 				{ "state": ["default"], "img": "assets/avatars/char3/char3_20s_neutral.png"},
 				//{ "state": ["tension gte 2"], "img": "assets/avatars/char3/char3_20s_disappointed.png"}
 			],
@@ -20,7 +20,7 @@
 	],
 
 	"dataFiles" : [				//which data files to use in scene-content when assembling valid fragments for this scene
-		"text!example_staticBranchingData",
+		"text!example_dynamicBranchingData",
 	],
 	
 	"startState" : [				//starting state for the scene
@@ -40,7 +40,7 @@
 		descriptionText (timeline view only): text to display on the timeline when players are selecting it
 	*/
 	"fallbackOutro" : "<p>Something went wrong!</p>",
-	"outroText" : "<p>Example complete! That's how static branching works!</p>",
+	"outroText" : "<p>Example complete! That's how dynamic branching works!</p>",
 	"introText" : "<p>It was a beautiful summer day, so you decided to take a walk in the strange wood near your house.</p>",
-	"descriptionText" : "<h3>Static Branching</h3><p>An example scene demonstrating static branching.</p><h3><a href='#' class='beginScene' id='begin-example-staticBranching'>Begin Scene</a></h3>"
+	"descriptionText" : "<h3>Dynamic Branching</h3><p>An example scene demonstrating dynamic branching.</p><h3><a href='#' class='beginScene' id='begin-example-staticBranching'>Begin Scene</a></h3>"
 }

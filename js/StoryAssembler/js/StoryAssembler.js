@@ -11,12 +11,14 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	var StoryDisplay;
 	var Display;
 	var Coordinator;
+	var Character;
 	
 	var beginScene = function(_wishlist, _chunkLibrary, _State, _StoryDisplay, _Display, _Character, _Coordinator, params) {
 		chunkLibrary = _chunkLibrary;
 		State = _State;
 		StoryDisplay = _StoryDisplay;
 		Display = _Display;
+		Character = _Character;
 		Coordinator = _Coordinator;
 		wishlist = _wishlist;
 		params = params || {};

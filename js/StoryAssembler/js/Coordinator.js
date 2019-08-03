@@ -1,8 +1,7 @@
 define([
 	"Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character", "Hanson", 
-	"text!globalData", "text!exampleData", "text!exampleConfig", "text!example_staticBranchingData", "text!example_staticBranchingConfig","text!testScene2Data", "text!testScene2Config"
-	], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, 
-		globalData, exampleData, exampleConfig, example_staticBranchingData, example_staticBranchingConfig, testScene2Data, testScene2Config) {
+	"text!example_staticBranchingData", "text!example_staticBranchingConfig","text!example_dynamicBranchingData", "text!example_dynamicBranchingConfig"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Hanson, 
+		example_staticBranchingData, example_staticBranchingConfig, example_dynamicBranchingData, example_dynamicBranchingConfig) {
 
 
 	//----------------------------------------------------------------
@@ -16,7 +15,7 @@ define([
 		"recordPlaythroughs" : true,
 		"consoleLogs" : [],					//which logs are displayed. Can be StoryAssembler or All...in an array so in the future we can be additive
 
-		"interfaceMode" : "normal",			//what title screen interface to use...a Begin link and progress scene-to-scene ("normal") or a timeline that's returned to ("timeline")
+		"interfaceMode" : "titleScreen",	//what title screen interface to use...a Begin link and progress scene-to-scene ("titleScreen") or a timeline that's returned to ("timeline")
 		"avatarMode" : "oneMain",			//"oneMain" means display avatar of speaking character next to text, otherwise "normal" RPG style
 
 		"showUnavailableChoices" : true,	//if players should see choices they can't pick due to state, or if they're hidden
@@ -26,18 +25,15 @@ define([
 		"optionalFields" : ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt", "avatar"],		//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
 
 		"scenes" : {
-			"exampleScene-branching" : {
+			"example-staticBranching" : {
 				"config" : HanSON.parse(example_staticBranchingConfig)
 			},
-			"exampleScene" : {
-				"config" : HanSON.parse(exampleConfig)
-			},
-			"testScene2" : {
-				"config" : HanSON.parse(testScene2Config)
+			"example-dynamicBranching" : {
+				"config" : HanSON.parse(example_dynamicBranchingConfig)
 			}
 		},
 
-		"sceneOrder" : ["exampleScene-branching", "exampleScene"]			//progression of scenes when you hit "Begin", or laid out in timeline
+		"sceneOrder" : ["example-staticBranching", "example-dynamicBranching"]			//progression of scenes when you hit "Begin", or laid out in timeline
 	}
 
 	/*
@@ -56,9 +52,11 @@ define([
 		if (settings.interfaceMode == "timeline") {
 			Display.initTimelineScreen(this, State, settings.scenes, settings.sceneOrder);		//start up Timeline UI
 		}
-		else {
+		else if (settings.interfaceMode == "titleScreen") {
 			Display.initTitleScreen(this, State, settings.scenes, settings.sceneOrder);		//start up scene list UI
 		}
+
+		else {console.error("settings.interfaceMode isn't set to timeline or titleScreen!")}
 
 	}
 
@@ -104,7 +102,10 @@ define([
 			}
 			
 		}
-		levelDataArray.push(HanSON.parse(globalData));
+		try { levelDataArray.push(HanSON.parse(globalData)); }
+		catch (ex) {
+			console.log("no global data file defined for this project")
+		}
 
 		ChunkLibrary.reset();
 		for (var x=0; x < levelDataArray.length; x++) { ChunkLibrary.add(levelDataArray[x], settings); }		//add in fragments from all files

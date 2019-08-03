@@ -3,7 +3,7 @@
   {
     "id": "beginningFragment",
     "avatar": "protagonist",
-    "content": "You walk down the path a bit, watching the light dapple into shadow as a gentle breeze shakes the crowns of trees. After a few minutes, you come to a fork in the path.",
+    "content": "Static You walk down the path a bit, watching the light dapple into shadow as a gentle breeze shakes the crowns of trees. After a few minutes, you come to a fork in the path.",
     "choices": [
       {"gotoId": "choice1"},
       {"gotoId": "choice2"},

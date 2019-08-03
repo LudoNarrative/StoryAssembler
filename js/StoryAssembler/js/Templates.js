@@ -280,12 +280,12 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				return "(charTrait)";
 			}
 
-			if (typeof theChar[params[1]] == "undefined") {
+			if (typeof theChar.properties[params[1]] == "undefined") {
 				console.error("Tried to run 'charTrait' template, but '" + params[0] + "' doesn't have the trait '" + params[1] + "'.");
 				return params[2];
 			}
 
-			return theChar[params[1]];
+			return theChar.properties[params[1]];
 		},
 
 		//{ifCharTraitIs|protagonist|trait statement like charisma eq 5|text if true|text if false}
@@ -304,12 +304,12 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			var bbParam = params[0] + "_" + parts.param;
 			var check = bbParam + " " + parts.op + " " + parts.value;
 
-			if (typeof theChar[parts.param] == "undefined") {
+			if (typeof theChar.properties[parts.param] == "undefined") {
 				console.error("Tried to run 'ifCharTraitIs' template, but '" + params[0] + "' doesn't have the trait '" + parts.param + "'.");
 				return params[3];
 			}
 
-			State.set(bbParam, theChar[parts.param]);		//set temp blackboard item
+			State.set(bbParam, theChar.properties[parts.param]);		//set temp blackboard item
 			if (State.isTrue(check)) {
 				State.remove(bbParam);			//remove temp blackboard item
 				return params[2];

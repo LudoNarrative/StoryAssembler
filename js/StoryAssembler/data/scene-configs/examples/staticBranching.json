@@ -10,7 +10,8 @@
 			"properties" : {			//bespoke data for each character used in custom text templates
 				"name": "Emma",
 				"nickname" : "Em",
-				"pronouns" : "she"
+				"pronouns" : "she",
+				"favoriteColosssr" : "red"
 			}
 		}
 	],

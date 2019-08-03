@@ -1,3 +1,7 @@
+/*
+Dynamic Branching: A simple "hello world" example using StoryAssembler essentially like Twine
+*/
+
 [
 
   {
@@ -5,24 +9,21 @@
     "avatar": "protagonist",
     "content": "You walk down the path a bit, watching the light dapple into shadow as a gentle breeze shakes the crowns of trees. After a few minutes, you come to a fork in the path.",
     "choices": [
-      {"gotoId": "choice1"},
-      {"gotoId": "choice2"},
+      { "condition" : "shadowy eq true" },        //link to valid fragments that have effects setting 'shadowy' to true
+      { "condition" : "highAltitude eq true" }
     ],
-    "conditions": [
-
-    ]
+    "conditions": [],
   },
     {
-    "id": "choice1",
+    "id": "shadowyPath",
     "choiceLabel" : "The left path dips into shadow.",
     "avatar": "protagonist",
     "content": "You take the left path, and soon the summer light has dimmed to a warm and bosky twilight.",
     "choices": [
-      {"gotoId": "endingFragment"}
+      { "condition" : "finishExampleScene eq true" }
     ],
-    "conditions": [
-
-    ]
+    "conditions": [],
+    "effects" : ["set shadowy true"]          //the effect that makes the first choice in 'beginningFragment' route to here
   },
     {
     "id": "choice2",
@@ -30,11 +31,10 @@
     "avatar": "protagonist",
     "content": "You huff a bit as you climb, feeling a pleasant burn in your calves. After a few minutes of exertion, you arrive at the top.",
     "choices": [
-      {"gotoId": "endingFragment"}
+      { "condition" : "finishExampleScene eq true" }
     ],
-    "conditions": [
-
-    ]
+    "conditions": [],
+    "effects" : ["set highAltitude true"]       //the effect that makes the second choice in 'beginningFragment' route to here
   },
   {
     "id": "endingFragment",
@@ -47,7 +47,7 @@
     "conditions": [
     ],
     "effects" : [
-      "set finishExampleScene true"
+      "set finishExampleScene true"           //the effect that makes both choices in 'choice1' and 'choice2' route here
     ]
   },
     {
