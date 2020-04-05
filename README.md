@@ -41,3 +41,6 @@ The dynamic templating system means it's also good if:
 
 ## Who's Used This Thing?
 A version of this system was used to drive the narrative component of [_Emma's Journey_](https://emmasjourney.soe.ucsc.edu/), a generative game about climate change created by UC Santa Cruz.
+
+## I Heard There's A Cool Narrative Viz For This Thing!
+There's a viz for an older version of this library [here](https://people.ucsc.edu/~jgarbe/demo/StoryAssembler/editor.html), but because it still has some pernicious bugs, we're not including it in the library (for now).
